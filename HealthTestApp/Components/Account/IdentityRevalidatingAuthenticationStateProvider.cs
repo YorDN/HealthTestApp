@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using HealthTestApp.Data;
+using HealthTestApp.Data.Models;
 
 namespace HealthTestApp.Components.Account;
 

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Primitives;
 using HealthTestApp.Components.Account.Pages;
 using HealthTestApp.Components.Account.Pages.Manage;
 using HealthTestApp.Data;
+using HealthTestApp.Data.Models;
 
 namespace Microsoft.AspNetCore.Routing;
 

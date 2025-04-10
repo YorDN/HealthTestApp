@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using HealthTestApp.Data;
+using HealthTestApp.Data.Models;
 
 namespace HealthTestApp.Components.Account;
 

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using HealthTestApp.Components;
 using HealthTestApp.Components.Account;
 using HealthTestApp.Data;
+using HealthTestApp.Data.Models;
 
 namespace HealthTestApp;
 
