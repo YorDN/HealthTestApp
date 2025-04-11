@@ -1,30 +1,68 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4 header">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+<div class="wrapper">
+    <div class="page">
+        <div class="sidebar">
+            <NavMenu />
         </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+        <main>
+            <div class="top-row px-4 header">
+                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            </div>
+
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
+    </div>
 </div>
 <style>
-    .sidebar {
-        background-image: linear-gradient(180deg, #7BCAFF, #632FFF 100%) !important;
-        border-radius: 28px;
+    html, body {
+        height: 100%;
+        margin: 0;
     }
 
-    .header{
+    /* Add margin around the full page */
+    .wrapper {
+        padding: 8px; /* Adjust this to control outer spacing */
+        height: 100vh;
+        box-sizing: border-box;
+        background-color: #f0f0f0; /* Optional: subtle background */
+    }
+
+    .page {
+        display: flex;
+        height: 100%;
+        width: 100%;
+         /* Optional: cap the page width */
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: white;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Optional: soft shadow */
+    }
+
+    .sidebar {
+        background-image: linear-gradient(180deg, #7BCAFF, #632FFF 100%) !important;
+        border-radius: 12px 0 0 12px;
+        width: 250px;
+    }
+
+    .header {
         background-color: white !important;
         border: none;
         box-shadow: none !important;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .content {
+        flex: 1;
+        overflow-y: auto;
     }
 </style>
 <div id="blazor-error-ui">

@@ -1,9 +1,14 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height: 100%;
+    margin: 0;
 }
 body{
     margin: 10px;
     border-radius: 20px;
+}
+main {
+    background-image: linear-gradient(to top right, white, #EAEFFF);
 }
 a, .btn-link {
     color: #006bb7;
