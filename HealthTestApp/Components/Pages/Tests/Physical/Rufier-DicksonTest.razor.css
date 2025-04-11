@@ -1,5 +1,6 @@
 ﻿.shell{
-    background-color: azure;
+    background-color: white;
+    border-radius: 28px;
     height: 100%;
 }
 main{

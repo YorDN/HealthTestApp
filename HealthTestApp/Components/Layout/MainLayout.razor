@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using HealthTestApp.Service
+@inject LayoutState LayoutState
+@inherits LayoutComponentBase
+@implements IDisposable
 
 <div class="wrapper">
     <div class="page">
@@ -7,8 +10,23 @@
         </div>
 
         <main>
-            <div class="top-row px-4 header">
-                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <div class="page-header">
+                <div>
+                    <div class="main-title">
+                        <h3>@LayoutState.HeaderTitle</h3>
+                    </div>
+                    @if (LayoutState.Cathegory == "Physical")
+                    {
+                        color = "#5427DB";
+                    }
+                    else if (LayoutState.Cathegory == "Psychological")
+                    {
+                        color = "#2790FF";
+                    }
+                    <div class="cathegory">
+                        <p style="color: @color">@LayoutState.Cathegory</p>
+                    </div>
+                </div>
             </div>
 
             <article class="content px-4">
@@ -19,50 +37,65 @@
 </div>
 <style>
     html, body {
-        height: 100%;
-        margin: 0;
+    height: 100%;
+    margin: 0;
     }
 
     /* Add margin around the full page */
     .wrapper {
-        padding: 8px; /* Adjust this to control outer spacing */
-        height: 100vh;
-        box-sizing: border-box;
-        background-color: #f0f0f0; /* Optional: subtle background */
+    padding: 8px; /* Adjust this to control outer spacing */
+    height: 100vh;
+    box-sizing: border-box;
+    background-color: white; 
     }
 
     .page {
-        display: flex;
-        height: 100%;
-        width: 100%;
-         /* Optional: cap the page width */
-        border-radius: 12px;
-        overflow: hidden;
-        background-color: white;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Optional: soft shadow */
+    display: flex;
+    height: 100%;
+    width: 100%;
+    /* Optional: cap the page width */
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: white;
+    /* Optional: soft shadow */
     }
 
     .sidebar {
-        background-image: linear-gradient(180deg, #7BCAFF, #632FFF 100%) !important;
-        border-radius: 12px 0 0 12px;
-        width: 250px;
+    background-image: linear-gradient(180deg, #7BCAFF, #632FFF 100%) !important;
+    border-radius: 12px 0 0 12px;
+    width: 250px;
     }
 
-    .header {
-        background-color: white !important;
-        border: none;
-        box-shadow: none !important;
-    }
+
 
     main {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     }
 
+    .main-title h3{
+    margin-bottom: 3px;
+    font-weight: 700;
+    color: #404040;
+    }
+
+    .cathegory p{
+    margin: 0px;
+    font-size: 1.50rem;
+    font-weight: 600;
+    }
     .content {
-        flex: 1;
-        overflow-y: auto;
+    flex: 1;
+    overflow-y: auto;
+    }
+
+    .page-header{
+    padding-left: 32px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+
     }
 </style>
 <div id="blazor-error-ui">
@@ -70,3 +103,22 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+@code{
+    private string color = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        LayoutState.OnChange += LayoutChanged;
+    }
+
+    private void LayoutChanged()
+    {
+        InvokeAsync(StateHasChanged); // Ensures this is on the UI thread
+    }
+
+    public void Dispose()
+    {
+        LayoutState.OnChange -= LayoutChanged;
+    }
+
+}

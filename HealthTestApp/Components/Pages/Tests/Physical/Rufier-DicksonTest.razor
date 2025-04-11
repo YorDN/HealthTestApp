@@ -1,14 +1,20 @@
-﻿@using Microsoft.AspNetCore.Authorization
+﻿@using HealthTestApp.Service
+@using Microsoft.AspNetCore.Authorization
+@inject LayoutState LayoutState
 @* @attribute [Authorize] *@
-@page "/tests/rufier-dickson"
+@page "/tests/ruffier-dickson"
+@layout HealthTestApp.Components.Layout.MainLayout
 
-<h3>Rufier_DicksonTest</h3>
+
 <div class="shell">
 	<div class="test-container">
-		sdsd
+		
 	</div>
 </div>
 
 @code {
-
+	protected override void OnInitialized()
+	{
+		LayoutState.SetLayout("Ruffier-Dickson Test", "Physical");
+	}
 }

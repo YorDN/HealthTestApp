@@ -5,6 +5,7 @@ using HealthTestApp.Components;
 using HealthTestApp.Components.Account;
 using HealthTestApp.Data;
 using HealthTestApp.Data.Models;
+using HealthTestApp.Service;
 
 namespace HealthTestApp;
 
@@ -22,6 +23,7 @@ public class Program
         builder.Services.AddScoped<IdentityUserAccessor>();
         builder.Services.AddScoped<IdentityRedirectManager>();
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+        builder.Services.AddSingleton<LayoutState>();
 
         builder.Services.AddAuthentication(options =>
             {
