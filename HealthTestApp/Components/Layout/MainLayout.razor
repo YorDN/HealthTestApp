@@ -23,9 +23,19 @@
                     {
                         color = "#2790FF";
                     }
-                    <div class="cathegory">
-                        <p style="color: @color">@LayoutState.Cathegory</p>
-                    </div>
+                    @if(color == string.Empty)
+                    {
+                        <div class="cathegory">
+                            <p style="color: @LayoutState.Color">@LayoutState.Cathegory</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="cathegory">
+                            <p style="color: @color">@LayoutState.Cathegory</p>
+                        </div>
+                    }
+
                 </div>
             </div>
 
