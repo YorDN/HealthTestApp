@@ -41,9 +41,32 @@ public class Program
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddSignInManager()
             .AddDefaultTokenProviders();
+        builder.Services.AddIdentityCore<ApplicationUser>(options =>
+        {
+            options.SignIn.RequireConfirmedAccount = true;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireDigit = true;
+            options.Password.RequiredLength = 8;
+
+        })
+           .AddEntityFrameworkStores<ApplicationDbContext>()
+           .AddSignInManager()
+           .AddDefaultTokenProviders();
 
         builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.Events.OnSignedIn = async context =>
+            {
+                var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+                var user = await userManager.GetUserAsync(context.Principal);
+                if (user != null)
+                {
+                    user.LastLogin = DateTime.Now;
+                    await userManager.UpdateAsync(user);
+                }
+            };
+        });
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

@@ -38,6 +38,7 @@
     private ApplicationUser user = default!;
     private string? username;
     private string? phoneNumber;
+    private string? profilePicture;
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
@@ -50,7 +51,7 @@
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
         username = await UserManager.GetUserNameAsync(user);
         phoneNumber = await UserManager.GetPhoneNumberAsync(user);
-
+        profilePicture = user.ProfilePicture;
         Input.PhoneNumber ??= phoneNumber;
     }
 
