@@ -1,0 +1,18 @@
+﻿
+<div class="input-label-container">
+	<label for="input" class="label">@Label</label>
+	<input type="@Type.ToLower()" placeholder="@Placeholder" name="input" class="input" min="@Minimum" max="@Maximum"/>
+</div>
+
+@code {
+	[Parameter]
+	public string Type { get; set; } = "Text";
+	[Parameter]
+	public string Label { get; set; } = string.Empty;
+	[Parameter]
+	public string Placeholder { get; set; } = string.Empty;
+	[Parameter]
+	public string Minimum { get; set; } = string.Empty;
+	[Parameter]
+	public string Maximum { get; set; } = string.Empty;
+}

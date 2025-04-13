@@ -1,0 +1,19 @@
+﻿.input {
+    border: none;
+    box-shadow: #D4DAEE 0px 0px 10px;
+    font-size: 1rem;
+    padding: 10px;
+    min-width: 300px;
+    margin-left: 1em;
+    border-radius: 10px;
+    
+}
+input:focus {
+    outline: none;
+}
+.input-label-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

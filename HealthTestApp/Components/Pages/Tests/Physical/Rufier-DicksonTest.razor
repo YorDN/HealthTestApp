@@ -1,15 +1,35 @@
 ﻿@using HealthTestApp.Service
 @using Microsoft.AspNetCore.Authorization
+@using HealthTestApp.Components.Pages.Tests.TestComponents
 @inject LayoutState LayoutState
 @* @attribute [Authorize] *@
 @page "/tests/ruffier-dickson"
 @layout HealthTestApp.Components.Layout.MainLayout
 
+<PageTitle>Ruffier-Dickson Test</PageTitle>
 
 <div class="shell">
 	<div class="test-container">
-		<p>Lorem ipsudiis sjdlk sl danjd nkjsbnd kjbhbe bkdsb kjadjk bfkjbdj fbdabfehfb </p>
+        <p class="text-lg mb-6">
+            The Ruffier-Dickson Test helps you measure your heart's recovery rate after exercise.
+            It’s a simple and effective way to understand your cardiovascular fitness level.
+        </p>
+
+
+        <div class="discription-container">
+            <h3 class="subtitle">How it works:</h3>
+            <ol class="list-decimal ml-5 space-y-1">
+                <li>Measure your resting pulse and blood pressure <strong class="bold-text">3 times</strong>.</li>
+                <li>Do squats for <strong class="bold-text">45 seconds</strong>.</li>
+                <li>Immediately measure your pulse and blood pressure <strong class="bold-text">5 times</strong></li>
+            </ol>
+        </div>
+        <div class="discription-container">
+            <h3 class="subtitle">Time to complete:</h3>
+            <p>The test takes around <strong class="bold-text">10 minutes</strong> to complete</p>
+        </div>
 	</div>
+   
 </div>
 
 @code {

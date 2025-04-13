@@ -19,7 +19,13 @@ a, .btn-link {
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
-
+.shell {
+    background-color: white;
+    border-radius: 28px;
+    height: 99%;
+    box-shadow: #D4DAEE 0px 0px 10px;
+    overflow: scroll;
+}
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }

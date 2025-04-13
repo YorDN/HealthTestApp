@@ -1,9 +1,16 @@
-﻿.shell {
-    background-color: white;
-    border-radius: 28px;
-    height: 99%;
-    box-shadow: #D4DAEE 0px 0px 10px;
-}
+﻿
 main{
     background-color: aqua;
+}
+.test-container{
+    padding: 30px;
+}
+.bold-text {
+    color: #632FFF;
+}
+.subtitle{
+    font-weight: 600;
+}
+.discription-container{
+    margin-top: 30px;
 }
