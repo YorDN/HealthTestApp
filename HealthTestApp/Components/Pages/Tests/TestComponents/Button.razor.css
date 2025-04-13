@@ -1,0 +1,15 @@
+﻿.button {
+    background-color: #632FFF;
+    color: white;
+    font-size: 1.25rem;
+    min-width: 200px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 15px;
+    transition: 0.15s;
+}
+.button-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}

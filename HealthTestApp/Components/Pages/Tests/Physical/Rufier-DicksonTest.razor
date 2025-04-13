@@ -1,6 +1,8 @@
-﻿@using HealthTestApp.Service
+﻿@using HealthTestApp.Data.Models
+@using HealthTestApp.Service
 @using Microsoft.AspNetCore.Authorization
 @using HealthTestApp.Components.Pages.Tests.TestComponents
+@rendermode InteractiveServer
 @inject LayoutState LayoutState
 @* @attribute [Authorize] *@
 @page "/tests/ruffier-dickson"
@@ -9,32 +11,52 @@
 <PageTitle>Ruffier-Dickson Test</PageTitle>
 
 <div class="shell">
-	<div class="test-container">
-        <p class="text-lg mb-6">
-            The Ruffier-Dickson Test helps you measure your heart's recovery rate after exercise.
-            It’s a simple and effective way to understand your cardiovascular fitness level.
-        </p>
+    <div class="test-container">
+        @if(currentStep == 1)
+        {
 
+            <p class="text-lg mb-6">
+                The Ruffier-Dickson Test helps you measure your heart's recovery rate after exercise.
+                It’s a simple and effective way to understand your cardiovascular fitness level.
+            </p>
+            <div class="photo-container">
+                <img src="Images\TestsImages\Ruffier-Dickson-Test.svg" class="test-photo">
+            </div>
 
-        <div class="discription-container">
-            <h3 class="subtitle">How it works:</h3>
-            <ol class="list-decimal ml-5 space-y-1">
-                <li>Measure your resting pulse and blood pressure <strong class="bold-text">3 times</strong>.</li>
-                <li>Do squats for <strong class="bold-text">45 seconds</strong>.</li>
-                <li>Immediately measure your pulse and blood pressure <strong class="bold-text">5 times</strong></li>
-            </ol>
-        </div>
-        <div class="discription-container">
-            <h3 class="subtitle">Time to complete:</h3>
-            <p>The test takes around <strong class="bold-text">10 minutes</strong> to complete</p>
-        </div>
-	</div>
-   
+            <div class="discription-container">
+                <h3 class="subtitle">How it works:</h3>
+                <ol class="list-decimal ml-5 space-y-1">
+                    <li>Measure your resting pulse and blood pressure <strong class="bold-text">3 times</strong>.</li>
+                    <li>Do squats for <strong class="bold-text">45 seconds</strong>.</li>
+                    <li>Immediately measure your pulse and blood pressure <strong class="bold-text">5 times</strong></li>
+                </ol>
+            </div>
+            <div class="discription-container">
+                <h3 class="subtitle">Time to complete:</h3>
+                <p>The test takes around <strong class="bold-text">10 minutes</strong> to complete</p>
+            </div>
+            <Button Color="#632FFF" Text="Start" OnClick="() => currentStep = 2"></Button>
+        }
+        else if(currentStep == 2)
+        {
+            <StepProgress CurrentStep="4" TotalSteps="10"
+                          FilledColor="#632FFF"
+                          UnfilledColor="lightgray" />
+        }
+
+    </div>
+
 </div>
 
 @code {
-	protected override void OnInitialized()
-	{
-		LayoutState.SetLayout("Ruffier-Dickson Test", "Physical");
-	}
+    private RuffierDicksonTestData TestData = new();
+    private int currentStep = 1;
+    protected override void OnInitialized()
+    {
+        LayoutState.SetLayout("Ruffier-Dickson Test", "Physical");
+    }
+    void Clicked()
+    {
+        currentStep++;
+    }
 }

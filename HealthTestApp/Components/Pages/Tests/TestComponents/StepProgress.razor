@@ -1,0 +1,47 @@
+﻿<div class="bar-container">
+    <div class="inner-shell">
+        @for (int i = 1; i <= TotalSteps; i++)
+        {
+            <div class="@GetBlockClass(i)"></div>
+        }
+    </div>
+</div>
+<style>
+    .Completed, .Uncompleted{
+        width: 40px;
+        height: 12px;
+        border-radius: 4px;
+    }
+
+    .Completed{
+        background-color: @FilledColor;
+    }
+    .Uncompleted{
+        background-color: @UnfilledColor;
+    }
+    .bar-container{
+        display: flex;
+        justify-content: center;
+    }
+
+    .inner-shell{
+        display: flex;
+        justify-content: space-between;
+        width: 500px
+    }
+</style>
+@code {
+    [Parameter] 
+    public int CurrentStep { get; set; }
+    [Parameter] 
+    public int TotalSteps { get; set; }
+    [Parameter] 
+    public string FilledColor { get; set; } = "";
+    [Parameter] 
+    public string UnfilledColor { get; set; } = "";
+
+    private string GetBlockClass(int index)
+    {
+        return index <= CurrentStep ? "Completed" : "Uncompleted";
+    }
+}

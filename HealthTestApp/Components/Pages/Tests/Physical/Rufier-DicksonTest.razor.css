@@ -14,3 +14,10 @@ main{
 .discription-container{
     margin-top: 30px;
 }
+.test-photo{
+    height: 20rem;
+}
+.photo-container{
+    display: flex;
+    justify-content: center;
+}
