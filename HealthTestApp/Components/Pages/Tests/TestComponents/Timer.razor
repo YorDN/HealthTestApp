@@ -1,0 +1,78 @@
+﻿@using System.Timers
+@inject IJSRuntime JS
+<div class="text-xl font-semibold">
+    @TimeDisplay
+</div>
+
+<audio id="timerSound" src="sound.mp3" preload="auto"></audio>
+
+@code {
+    private System.Timers.Timer? _timer;
+    private TimeSpan _remainingTime;
+    private bool _isRunning = false;
+
+    [Parameter] 
+    public int Seconds { get; set; }
+    [Parameter] 
+    public EventCallback OnFinished { get; set; }
+
+    public bool IsRunning => _isRunning;
+
+    public void Start()
+    {
+        _remainingTime = TimeSpan.FromSeconds(Seconds);
+
+        _timer = new System.Timers.Timer(1000); // 1s
+        _timer.Elapsed += TimerElapsed;
+        _timer.Start();
+        _isRunning = true;
+    }
+
+    public void Stop()
+    {
+        _timer?.Stop();
+        _isRunning = false;
+    }
+
+    public void Pause()
+    {
+        _timer?.Stop();
+        _isRunning = false;
+    }
+
+    public void Resume()
+    {
+        _timer?.Start();
+        _isRunning = true;
+    }
+
+    public void Reset()
+    {
+        Stop();
+        _remainingTime = TimeSpan.FromSeconds(Seconds);
+    }
+
+    private void TimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        _remainingTime = _remainingTime.Subtract(TimeSpan.FromSeconds(1));
+        InvokeAsync(StateHasChanged);
+
+        if (_remainingTime.TotalSeconds <= 0)
+        {
+            Stop();
+            InvokeAsync(async () =>
+            {
+                await OnFinished.InvokeAsync();
+                await PlaySound();
+            });
+        }
+    }
+
+    private string TimeDisplay => _remainingTime.ToString(@"mm\:ss");
+
+    private async Task PlaySound()
+    {
+        await JS.InvokeVoidAsync("document.getElementById('timerSound').play");
+    }
+
+}

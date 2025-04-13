@@ -36,14 +36,88 @@
                 <p>The test takes around <strong class="bold-text">10 minutes</strong> to complete</p>
             </div>
             <Button Color="#632FFF" Text="Start" OnClick="() => currentStep = 2"></Button>
+
         }
         else if(currentStep == 2)
         {
-            <StepProgress CurrentStep="4" TotalSteps="10"
-                          FilledColor="#632FFF"
-                          UnfilledColor="lightgray" />
-        }
+            <StepProgress CurrentStep="1" TotalSteps="3"
+            FilledColor="#632FFF"
+            UnfilledColor="lightgray" />
+            for (int i = 0; i < 3; i++)
+            {
+                <div class="measure-container">
+                    <h3>Measure @(i + 1)</h3>
+                    <div class="blood-pressure-container">
+                        <div class="input-container">
+                            <Input Placeholder="Systolic (Up)" @bind-Value="TestData.Measurements[i].Systolic" Type="number" Minimum="0"></Input>
+                        </div>
+                        <div class="input-container">
+                            <Input Placeholder="Diastolic (Down)" @bind-Value="TestData.Measurements[i].Diastolic" Type="number" Minimum="0"></Input>
+                        </div>
+                        <div class="input-container">
+                            <Input Placeholder="Heart Rate" @bind-Value="TestData.Measurements[i].HeartRate" Type="number" Minimum="0"></Input>
+                        </div>
+                    </div>
+                </div>
 
+            }
+            <div style="display: flex; justify-content: center;">
+                <div style="display: flex; justify-content: space-between; flex: 1; max-width: 500px;">
+                    <Button Color="#632FFF" Text="Previous" OnClick="() => currentStep--"></Button>
+                    <Button Color="#632FFF" Text="Next" OnClick="() => currentStep++"></Button>
+                </div>
+            </div>
+
+        }
+        else if (currentStep == 3)
+        {
+            <StepProgress CurrentStep="2" TotalSteps="3"
+            FilledColor="#632FFF"
+            UnfilledColor="lightgray" />
+            <Timer @ref = "timer" Seconds = "45" OnFinished = "OnTimerFinished" />
+
+            //TO DO: MAKE IT PLAY AN ALARM AT FINISH
+            <button @onclick="StartTimer" disabled="@timer?.IsRunning">Start</button>
+            <button @onclick="PauseTimer" disabled="@(!timer?.IsRunning ?? true)">Pause</button>
+            <button @onclick="ResumeTimer" disabled="@(timer?.IsRunning ?? false)">Resume</button>
+            <div style="display: flex; justify-content: center;">
+                <div style="display: flex; justify-content: space-between; flex: 1; max-width: 500px;">
+                    <Button Color="#632FFF" Text="Previous" OnClick="() => currentStep--"></Button>
+                    <Button Color="#632FFF" Text="Next" OnClick="() => currentStep++"></Button>
+                </div>
+            </div>
+
+        }
+        else if(currentStep == 4)
+        {
+            <StepProgress CurrentStep="3" TotalSteps="3"
+            FilledColor="#632FFF"
+            UnfilledColor="lightgray" />
+            for (int i = 3; i < 8; i++)
+            {
+                <div class="measure-container">
+                    <h3>Measure @(i + 1)</h3>
+                    <div class="blood-pressure-container">
+                        <div class="input-container">
+                            <Input Placeholder="Systolic (Up)" @bind-Value="TestData.Measurements[i].Systolic" Type="number" Minimum="0"></Input>
+                        </div>
+                        <div class="input-container">
+                            <Input Placeholder="Diastolic (Down)" @bind-Value="TestData.Measurements[i].Diastolic" Type="number" Minimum="0"></Input>
+                        </div>
+                        <div class="input-container">
+                            <Input Placeholder="Heart Rate" @bind-Value="TestData.Measurements[i].HeartRate" Type="number" Minimum="0"></Input>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <div style="display: flex; justify-content: center;">
+                <div style="display: flex; justify-content: space-between; flex: 1; max-width: 500px;">
+                    <Button Color="#632FFF" Text="Previous" OnClick="() => currentStep--"></Button>
+                    <Button Color="#632FFF" Text="Finish" OnClick="OnFinish"></Button>
+                </div>
+            </div>
+        }
     </div>
 
 </div>
@@ -51,6 +125,17 @@
 @code {
     private RuffierDicksonTestData TestData = new();
     private int currentStep = 1;
+    private Timer? timer;
+    private double Index;
+
+    private void StartTimer() => timer?.Start();
+    private void PauseTimer() => timer?.Pause();
+    private void ResumeTimer() => timer?.Resume();
+
+    private void OnTimerFinished()
+    {
+        Console.WriteLine("Timer finished!");
+    }
     protected override void OnInitialized()
     {
         LayoutState.SetLayout("Ruffier-Dickson Test", "Physical");
@@ -58,5 +143,25 @@
     void Clicked()
     {
         currentStep++;
+    }
+    private void OnFinish()
+    {
+        // Index = ((P1 + P2 + P3) - 200) / 10.0;
+
+        // if (Index <= 5)
+        //     Interpretation = "🟢 Excellent";
+        // else if (Index <= 10)
+        //     Interpretation = "🟢 Good";
+        // else if (Index <= 15)
+        //     Interpretation = "🟡 Satisfactory";
+        // else if (Index <= 20)
+        //     Interpretation = "🟠 Weak";
+        // else
+        //     Interpretation = "🔴 Very Poor";
+
+        TestData.Medians[0] = (int.Parse(TestData.Measurements[0].HeartRate) + int.Parse(TestData.Measurements[1].HeartRate) + int.Parse(TestData.Measurements[2].HeartRate)) / 3;
+        TestData.Medians[1] = (int.Parse(TestData.Measurements[3].HeartRate) + int.Parse(TestData.Measurements[4].HeartRate) + int.Parse(TestData.Measurements[5].HeartRate)) / 3;
+        TestData.Medians[2] = int.Parse(TestData.Measurements[3].HeartRate);
+        Index = (TestData.Medians[0] + TestData.Medians[1] + TestData.Medians[2] - 200) / 10;
     }
 }

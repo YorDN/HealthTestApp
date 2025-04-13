@@ -1,10 +1,14 @@
 ﻿
-<div class="input-label-container">
-	<label for="input" class="label">@Label</label>
-	<input type="@Type.ToLower()" placeholder="@Placeholder" name="input" class="input" min="@Minimum" max="@Maximum"/>
-</div>
+<label for="input" class="label">@Label</label>
+<input @bind="@Value" type="@Type.ToLower()" placeholder="@Placeholder" name="input" class="input" min="@Minimum" max="@Maximum" />
 
 @code {
+	[Parameter]
+	public string Value { get; set; }
+
+	[Parameter]
+	public EventCallback<string> ValueChanged { get; set; }
+
 	[Parameter]
 	public string Type { get; set; } = "Text";
 	[Parameter]

@@ -21,3 +21,14 @@ main{
     display: flex;
     justify-content: center;
 }
+.blood-pressure-container{
+    display: flex;
+
+
+}
+.input-container{
+    margin-right: 50px;
+}
+.measure-container{
+    margin: 50px;
+}
