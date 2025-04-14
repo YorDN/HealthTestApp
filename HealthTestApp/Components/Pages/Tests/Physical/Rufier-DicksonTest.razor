@@ -16,8 +16,13 @@
         {
 
             <p class="text-lg mb-6">
-                The Ruffier-Dickson Test helps you measure your heart's recovery rate after exercise.
-                It’s a simple and effective way to understand your cardiovascular fitness level.
+                The Ruffier-Dickson Test is a quick and reliable way to assess your heart’s recovery ability 
+                and overall cardiovascular fitness. It helps determine how efficiently your heart responds to 
+                physical exertion and how quickly it returns to its resting state.
+                Often used in fitness and wellness assessments, this test gives valuable insight into your endurance level 
+                and can help track improvements over time. It's a practical tool for anyone looking to monitor their heart 
+                health and physical condition
+                The test takes your heart rate and blood pressure to measure the wellbeing of your heart and it's vessels.
             </p>
             <div class="photo-container">
                 <img src="Images\TestsImages\Ruffier-Dickson-Test.svg" class="test-photo">
@@ -43,7 +48,13 @@
             <StepProgress CurrentStep="1" TotalSteps="3"
             FilledColor="#632FFF"
             UnfilledColor="lightgray" />
+            <br />
+            <h2 style="font-weight: bold; color: #404040; margin-bottom: 20px; text-align: center;">Step 1: Measure your Heart rate and Blood pressure <span class="bold-text"> 3 times</span></h2>
             k = 0;
+
+            <p style="text-align: center;">
+                Firstly you need to measure your heart rate and blood pressure in a resting and comfortable for you position.
+                Please refrain from moving while doing the measure to insure optimal measurements.</p>
             @foreach (var measure in measurementEntries1)  // Loop over the three measurements
             {
                 <div class="measure-container">
@@ -71,6 +82,9 @@
                 </div>
                 k++;
             }
+            <p style="opacity: 0.6; text-align: center;">
+                <i>Help: The Systolic is the upper value of your blood pressure (If you have 120:80, the systolic is 120), and Diastolic is the lower number (in our case 80).</i>
+            </p>
             <div style="display: flex; justify-content: center;">
                 <div style="display: flex; justify-content: space-between; flex: 1; max-width: 500px;">
                     <Button Color="#632FFF" Text="Previous" OnClick="() => currentStep--"></Button>
@@ -78,12 +92,17 @@
                 </div>
             </div>
 
+
         }
         else if (currentStep == 3)
         {
             <StepProgress CurrentStep="2" TotalSteps="3"
             FilledColor="#632FFF"
             UnfilledColor="lightgray" />
+            <br />
+            <h2 style="font-weight: bold; color: #404040; margin-bottom: 20px; text-align: center;">Step 2: Do squats for <span class="bold-text"> 45 seconds</span></h2>
+            <p style="text-align: center;">Start the timer and do as much squats as your can for 45 seconds. If you have a analog blood pressure monitor, do not remove it from your arm if you can.</p>
+            
             //TO DO: MAKE IT PLAY AN ALARM AT FINISH
             <div class="timer-container">
                 <div class="timer-shell">
@@ -112,7 +131,10 @@
             <StepProgress CurrentStep="3" TotalSteps="3"
             FilledColor="#632FFF"
             UnfilledColor="lightgray" />
+            <br />
+            <h2 style="font-weight: bold; color: #404040; margin-bottom: 20px; text-align: center;">Step 3: Measure your Heart rate and Blood pressure <span class="bold-text"> 5 times</span></h2>
             k = 3;
+            <p style="text-align: center;">Last step! Now monitor your blood pressure and heart rate another 5 times without resting from the squats.</p>
             @foreach (var measure in measurementEntries2)  // Loop over the three measurements
             {
                 <div class="measure-container">
@@ -140,6 +162,9 @@
                 </div>
                 k++;
             }
+            <p style="opacity: 0.6; text-align: center;">
+                <i>Help: The Systolic is the upper value of your blood pressure (If you have 120:80, the systolic is 120), and Diastolic is the lower number (in our case 80).</i>
+            </p>
             <div style="display: flex; justify-content: center;">
                 <div style="display: flex; justify-content: space-between; flex: 1; max-width: 500px;">
                     <Button Color="#632FFF" Text="Previous" OnClick="() => currentStep--"></Button>
