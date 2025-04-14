@@ -1,6 +1,6 @@
 ﻿
-<label for="input" class="label">@Label</label>
-<input @bind="@Value" type="@Type.ToLower()" placeholder="@Placeholder" name="input" class="input" min="@Minimum" max="@Maximum" />
+<label class="label">@Label</label>
+<input @bind="@Value" @oninput="OnInput" type="@Type.ToLower()" placeholder="@Placeholder" class="input" min="@Minimum" max="@Maximum" />
 
 @code {
 	[Parameter]
@@ -19,4 +19,10 @@
 	public string Minimum { get; set; } = string.Empty;
 	[Parameter]
 	public string Maximum { get; set; } = string.Empty;
+
+	private async Task OnInput(ChangeEventArgs e)
+	{
+		Value = e.Value?.ToString() ?? string.Empty;
+		await ValueChanged.InvokeAsync(Value);
+	}
 }

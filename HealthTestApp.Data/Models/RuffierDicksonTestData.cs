@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,11 +14,8 @@ namespace HealthTestApp.Data.Models
         public Dictionary<string, double> Outputs { get; set; } = new();
         public RuffierDicksonTestData()
         {
-            for (int i = 0; i < 8; i++)
-            {
-                //To pre-fill the List with 8 measurements.
-                Measurements.Add(new MeasurementEntry());
-            }
+            Measurements = Enumerable.Range(0, 8).Select(_ => new MeasurementEntry()).ToList();
+
         }
 
     }
