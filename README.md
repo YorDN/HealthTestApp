@@ -48,7 +48,7 @@ When done migrating update the database:
 We are open to improvements and we will be happy if you have any ideas on improving the platform as a whole. You can contribute in several different ways: 
 - Through the website feedback section, where you can give your feedback for the website and improvements you wish to see happen. After that our team will contact you as fast as possible. 
 - Through creating a pull request on the git repo. One of our team members will review your requiest and will decide which action is best for the platform.
-- Through direct feedback in our social media platforms. Please note that the responce time is slower if you prefer this option and with lower priority compared to the other methods. There will be community polls and community QNA, which will be with high priority. You will be alerted for them in both social media and in the website.
+- Through direct feedback in our social media platforms. Please note that the responce time is slower if you prefer this option and with lower priority compared to the other methods. There will be community polls and community QNA, which will be with high priority. You will be alerted for them in both social media and in the website.\
 *Plesase take contribution seriously. Unserious requiest will not be completed and the request/s will be deleted.*
 ## 6️⃣ Usage
 To use Izentia, first you need to make a profile. To do so please follow the provided on page instructions and regulations. \
