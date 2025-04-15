@@ -7,7 +7,7 @@ The Izentia team consists of the following members:
 - **Yordan Yordanov** - Chief Frontend and Backend / Team Lead
 - **Lyubomir Kostadinov** - Backend
 - **Martin Mitev** - Research and Marketing
-- **Aleksandra Georgieva** - Consultant
+- **Aleksandra Georgieva** - Consultant /
 If you wish to contact any of them, you can look up their contact information on the Izentia website, on the specified page, dedicated to contacts. Please note that some members may not want their contact information on the page, so feel free to contact Izentia in one of the ways specified in the **Contribution section** and we will redirect you to the desired member of the team.
 
 ## 3️⃣ Documentation
