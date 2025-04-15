@@ -192,8 +192,8 @@
         }
         else if (currentStep == 5)
         {
-            <p>@HeartIndex</p>
-            <p>@VesselScore</p>
+
+            <p>Your test score: @HeartIndex</p>
         }
     </div>
 
@@ -216,6 +216,8 @@
     private string value = "";
     private string? ErrorMessage;
     private double VesselScore;
+    private string HeartInterception = string.Empty;
+    private string HeartResultColor = string.Empty;
 
     private void StartTimer() => timer?.Start();
     private void PauseTimer() => timer?.Pause();
@@ -301,10 +303,30 @@
 
         HeartIndex = (TestData.Medians[0] + TestData.Medians[1] + TestData.Medians[2] - 200) / 10;
         VesselScore = (TestData.BloodPressureMedians[0] + TestData.BloodPressureMedians[1] + TestData.BloodPressureMedians[2]) / 3;
-        
+
         TestData.Outputs["Heart Score"] = HeartIndex;
         TestData.Outputs["Blood Vessel Health"] = VesselScore;
 
+        if (HeartIndex >= 1 && HeartIndex <= 5)
+        {
+            HeartInterception = "Perfect";
+            HeartResultColor = "#53ff3b";
+        }
+        else if (HeartIndex >= 6 && HeartIndex <= 10)
+        {
+            HeartInterception = "Good";
+            HeartResultColor = "#cdff3b";
+        }
+        else if (HeartIndex >= 11 && HeartIndex <= 15)
+        {
+            HeartInterception = "Bad";
+            HeartResultColor = "#ff471f";
+        }
+        else if (HeartIndex > 15)
+        {
+            HeartInterception = "Consult a doctor right away!";
+            HeartResultColor = "#d50606";
+        }
         currentStep++;
     }
 }
