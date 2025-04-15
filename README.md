@@ -3,10 +3,10 @@
 ***Izentia*** is a *digital hub* for storing both phisical and psychological tests. It guides the user and helps him measure his general health. The tests are easy to do through the Web and don't require any *external hardware* ⛔.
 
 ## 2️⃣ Authors
-    1. Yordan Yordanov - Chief Frontend and Backend / Team Lead
-    2. Lyubomir Kostadinov - Backend
-    3. Martin Mitev - Research and Marketing
-    4. Aleksandra Georgieva - Consultant
+- Yordan Yordanov - Chief Frontend and Backend / Team Lead
+- Lyubomir Kostadinov - Backend
+- Martin Mitev - Research and Marketing
+- Aleksandra Georgieva - Consultant
 
 ## 3️⃣ Documentation
 ### Purpose 
