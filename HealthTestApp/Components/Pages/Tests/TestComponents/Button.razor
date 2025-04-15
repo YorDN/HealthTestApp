@@ -1,5 +1,5 @@
 ﻿<div class="button-container">
-    <button class="button" style="border: 1px solid @Color; background-color: @Color;" onclick="@OnClickHandler">@Text</button>
+    <button class="button" style="border: 1px solid @Color; background-color: @Color;" onclick="@OnClickHandler" type="@Type">@Text</button>
 </div>
 <style>
     .button:hover{
@@ -16,6 +16,9 @@
 
     [Parameter]
     public string Color { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Type { get; set; } = "button";
 
     [Parameter]
     public EventCallback OnClick { get; set; }

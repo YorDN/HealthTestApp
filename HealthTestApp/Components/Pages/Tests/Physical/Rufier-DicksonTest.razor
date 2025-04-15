@@ -55,6 +55,15 @@
             <p style="text-align: center;">
                 Firstly you need to measure your heart rate and blood pressure in a resting and comfortable for you position.
                 Please refrain from moving while doing the measure to insure optimal measurements.</p>
+            <div class="measure-container">
+                <div class="input-container">
+                    <Input  Placeholder="Weight" 
+                    @bind-Value="Weight"
+                    Type="number"
+                    Minimum="0"
+                    Label="Your weight (in kilograms / kg):"/>
+                </div>
+            </div>
             @foreach (var measure in measurementEntries1)  // Loop over the three measurements
             {
                 <div class="measure-container">
@@ -102,7 +111,7 @@
             <br />
             <h2 style="font-weight: bold; color: #404040; margin-bottom: 20px; text-align: center;">Step 2: Do squats for <span class="bold-text"> 45 seconds</span></h2>
             <p style="text-align: center;">Start the timer and do as much squats as your can for 45 seconds. If you have a analog blood pressure monitor, do not remove it from your arm if you can.</p>
-            
+
             //TO DO: MAKE IT PLAY AN ALARM AT FINISH
             <div class="timer-container">
                 <div class="timer-shell">
@@ -142,21 +151,21 @@
                     <div class="blood-pressure-container">
                         <div class="input-container">
                             <Input Placeholder="Systolic (Up)"
-                                   @bind-Value="@measure.Systolic"
-                                   Type="number"
-                                   Minimum="0" />
+                            @bind-Value="@measure.Systolic"
+                            Type="number"
+                            Minimum="0" />
                         </div>
                         <div class="input-container">
                             <Input Placeholder="Diastolic (Down)"
-                                   @bind-Value="@measure.Diastolic"
-                                   Type="number"
-                                   Minimum="0" />
+                            @bind-Value="@measure.Diastolic"
+                            Type="number"
+                            Minimum="0" />
                         </div>
                         <div class="input-container">
                             <Input Placeholder="Heart Rate"
-                                   @bind-Value="@measure.HeartRate"
-                                   Type="number"
-                                   Minimum="0" />
+                            @bind-Value="@measure.HeartRate"
+                            Type="number"
+                            Minimum="0" />
                         </div>
                     </div>
                 </div>
@@ -173,6 +182,11 @@
             </div>
 
         }
+        else if (currentStep == 5)
+        {
+            <p>@HeartIndex</p>
+            <p>@VesselScore</p>
+        }
     </div>
 
 </div>
@@ -181,11 +195,19 @@
     private RuffierDicksonTestData TestData = new();
     MeasurementEntry[] measurementEntries1 = new MeasurementEntry[3];
     MeasurementEntry[] measurementEntries2 = new MeasurementEntry[5];
+    private string Weight = string.Empty;
+    private double UserWeight;
     private int currentStep = 1;
+    private const int bloodDensity = 1050;
+    private const double bloodSpeed = 0.5;
+    private const double strokeVolumeMl = 60;
+    private double strokeVolumeM3;
     private int k;
     private Timer? timer;
-    private double Index;
+    private double HeartIndex;
     private string value = "";
+    private string? ErrorMessage;
+    private double VesselScore;
 
     private void StartTimer() => timer?.Start();
     private void PauseTimer() => timer?.Pause();
@@ -211,24 +233,70 @@
     {
         currentStep++;
     }
+    private void CalculateForEntry(int i)
+    {
+        var entry = TestData.Measurements[i];
+        TestData.BloodPressureMedians[i] = double.Parse(entry.Systolic) - double.Parse(entry.Diastolic);
+        TestData.CardiacDurations[i].CardiacCycleDurationSeconds = 60 / double.Parse(entry.HeartRate);
+        TestData.CardiacDurations[i].SystoleDurationSeconds = TestData.CardiacDurations[i].CardiacCycleDurationSeconds / 3;
+        TestData.PulsePressures[i] = (double.Parse(entry.Systolic) + double.Parse(entry.Diastolic)) / 2;
+        TestData.EjectedBloodMasses[i] = 0.7 * UserWeight * 1000 / double.Parse(entry.HeartRate);
+        TestData.ExternalWorks[i] = strokeVolumeM3 * TestData.PulsePressures[i] * 133;
+        TestData.KineticWorks[i] = (bloodDensity * strokeVolumeM3 * bloodSpeed * bloodSpeed) / 2;
+        TestData.TotalWorks[i] = 1.2 * (TestData.ExternalWorks[i] + TestData.KineticWorks[i]);
+        TestData.AveragePowers[i] = TestData.TotalWorks[i] / TestData.CardiacDurations[i].CardiacCycleDurationSeconds;
+    }
+    private bool ValidateInputs(List<MeasurementEntry> entries)
+    {
+        foreach (var entry in entries)
+        {
+            if (string.IsNullOrWhiteSpace(entry.Diastolic)
+                || string.IsNullOrWhiteSpace(entry.Systolic)
+                || string.IsNullOrWhiteSpace(entry.HeartRate))
+            {
+                ErrorMessage = "One or more of the input fields is empty. Please fill it out.";
+                return false;
+            }
+        }
+        return true;
+    }
     private void OnFinish()
     {
-        // Index = ((P1 + P2 + P3) - 200) / 10.0;
+        strokeVolumeM3 = strokeVolumeMl * 1e-6;
+        if (string.IsNullOrWhiteSpace(Weight))
+        {
+            ErrorMessage = "Please write your weight to view your results!";
+            return;
+        }
+        if (!ValidateInputs(measurementEntries1.ToList()) || !ValidateInputs(measurementEntries2.ToList()))
+            return;
+        UserWeight = double.Parse(Weight);
+        for (int i = 0; i < 3; i++)
+        {
+            TestData.Measurements[i] = measurementEntries1[i];
+            CalculateForEntry(i);
 
-        // if (Index <= 5)
-        //     Interpretation = "🟢 Excellent";
-        // else if (Index <= 10)
-        //     Interpretation = "🟢 Good";
-        // else if (Index <= 15)
-        //     Interpretation = "🟡 Satisfactory";
-        // else if (Index <= 20)
-        //     Interpretation = "🟠 Weak";
-        // else
-        //     Interpretation = "🔴 Very Poor";
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            TestData.Measurements[i + 3] = measurementEntries2[i];
+            CalculateForEntry(i + 3);
+        }
 
-        TestData.Medians[0] = (int.Parse(TestData.Measurements[0].HeartRate) + int.Parse(TestData.Measurements[1].HeartRate) + int.Parse(TestData.Measurements[2].HeartRate)) / 3;
-        TestData.Medians[1] = (int.Parse(TestData.Measurements[3].HeartRate) + int.Parse(TestData.Measurements[4].HeartRate) + int.Parse(TestData.Measurements[5].HeartRate)) / 3;
+        TestData.Medians[0] = (int.Parse(TestData.Measurements[0].HeartRate) 
+                                + int.Parse(TestData.Measurements[1].HeartRate) 
+                                + int.Parse(TestData.Measurements[2].HeartRate)) / 3;
+        TestData.Medians[1] = (int.Parse(TestData.Measurements[3].HeartRate) 
+                                + int.Parse(TestData.Measurements[4].HeartRate) 
+                                + int.Parse(TestData.Measurements[5].HeartRate)) / 3;
         TestData.Medians[2] = int.Parse(TestData.Measurements[7].HeartRate);
-        Index = (TestData.Medians[0] + TestData.Medians[1] + TestData.Medians[2] - 200) / 10;
+
+        HeartIndex = (TestData.Medians[0] + TestData.Medians[1] + TestData.Medians[2] - 200) / 10;
+        VesselScore = (TestData.BloodPressureMedians[0] + TestData.BloodPressureMedians[1] + TestData.BloodPressureMedians[2]) / 3;
+        
+        TestData.Outputs["Heart Score"] = HeartIndex;
+        TestData.Outputs["Blood Vessel Health"] = VesselScore;
+
+        currentStep++;
     }
 }
