@@ -25,11 +25,11 @@ Authentication and Authoriasation are done via the **ASP.NET Core Identity**
 - **Profile Manager** 🧑
 ## 4️⃣ Installation
 Izentia doesn't require Installation - if you wish to visit the website you can do so at 
-### Prerequisites
+### 🔧 Prerequisites
 - .NET 8 SDK
 - SQL Server
 - Blazor environment
-### Steps
+### 📋 Steps
 
 To install (clone) the repository you have to use the GUI of Github or write the following command: 
 ``` bash
