@@ -59,9 +59,7 @@ To manage your profile you have to go to the profile section, where you can upda
 
 ## 7️⃣ Data and Security
 All user data within Izentia remains strictly on the platform. Your personal information is stored only for the purpose of providing accurate test results. We do not sell or share your data with any third parties, nor is it used beyond its intended purpose. \
-
 Access to stored data is limited to essential processes only. Even contributors and developers working on the platform do not have access to the contents of the user database — only the structural schema necessary for development. \
-
 For more detailed information, please refer to the full Data & Security section available on the Izentia website.
 
 
