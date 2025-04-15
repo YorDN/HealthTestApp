@@ -55,6 +55,10 @@
             <p style="text-align: center;">
                 Firstly you need to measure your heart rate and blood pressure in a resting and comfortable for you position.
                 Please refrain from moving while doing the measure to insure optimal measurements.</p>
+            @if(ErrorMessage is not null)
+            {
+                <p style="color: red; text-align: center;">@ErrorMessage</p>
+            }
             <div class="measure-container">
                 <div class="input-container">
                     <Input  Placeholder="Weight" 
@@ -144,6 +148,10 @@
             <h2 style="font-weight: bold; color: #404040; margin-bottom: 20px; text-align: center;">Step 3: Measure your Heart rate and Blood pressure <span class="bold-text"> 5 times</span></h2>
             k = 3;
             <p style="text-align: center;">Last step! Now monitor your blood pressure and heart rate another 5 times without resting from the squats.</p>
+            @if (ErrorMessage is not null)
+            {
+                <p style="color: red; text-align: center;">@ErrorMessage</p>
+            }
             @foreach (var measure in measurementEntries2)  // Loop over the three measurements
             {
                 <div class="measure-container">
@@ -254,7 +262,7 @@
                 || string.IsNullOrWhiteSpace(entry.Systolic)
                 || string.IsNullOrWhiteSpace(entry.HeartRate))
             {
-                ErrorMessage = "One or more of the input fields is empty. Please fill it out.";
+                ErrorMessage = "One or more of the input fields is empty. Please fill them out.";
                 return false;
             }
         }
