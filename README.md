@@ -3,21 +3,24 @@
 ***Izentia*** is a *digital hub* for storing both phisical and psychological tests. It guides the user and helps him measure his general health. The tests are easy to do through the Web and don't require any *external hardware* ⛔.
 
 ## 2️⃣ Authors
-    1. Yordan Yordanov - Chief Frontend and Backend / Team Lead
-    2. Lyubomir Kostadinov - Backend
-    3. Martin Mitev - Research and Marketing
-    4. Aleksandra Georgieva - Consultant
+The Izentia team consists of the following members:
+- **Yordan Yordanov** - Chief Frontend and Backend / Team Lead
+- **Lyubomir Kostadinov** - Backend
+- **Martin Mitev** - Research and Marketing
+- **Aleksandra Georgieva** - Consultant
+
+If you wish to contact any of them, you can look up their contact information on the Izentia website, on the specified page, dedicated to contacts. Please note that some members may not want their contact information on the page, so feel free to contact Izentia in one of the ways specified in the **Contribution section** and we will redirect you to the desired member of the team.
 
 ## 3️⃣ Documentation
-### Purpose 
+### 🎯 Purpose 
 The purpose of Izentia is to be an easy way for a person to check his well-being 🍃, whilst offering seamless experience for both users and administration 🙍‍♂️. 
-### Technology
+### ⚙️ Technology
 Izentia relies on the **Blazor Framework** by Microsoft. It uses ***Razor pages*** and ***C#*** to make and connect the Frontend and Backend respectably. \
 It uses a Data base for storing the data of the users. **The DB uses *code-first* approach with the SQL Server and Entity Framework Core.**\
 Izentia is on .NET 8 version and will be updated in the future. \
 Authentication and Authoriasation are done via the **ASP.NET Core Identity**
 
-### Features
+### ✨ Features
 - **Test Library** (containing physical and psychological /mental/ tests) 📚
 - **Dashboard** for quick health check ❤️‍🩹
 - **Feedback panel 🛠️**
@@ -25,11 +28,11 @@ Authentication and Authoriasation are done via the **ASP.NET Core Identity**
 - **Profile Manager** 🧑
 ## 4️⃣ Installation
 Izentia doesn't require Installation - if you wish to visit the website you can do so at 
-### Prerequisites
+### 🔧 Prerequisites
 - .NET 8 SDK
 - SQL Server
 - Blazor environment
-### Steps
+### 📋 Steps
 
 To install (clone) the repository you have to use the GUI of Github or write the following command: 
 ``` bash
@@ -58,4 +61,8 @@ To manage your profile you have to go to the profile section, where you can upda
 *For individual tests, please follow the provided instructions and regulations.*
 
 ## 7️⃣ Data and Security
-All data within the Izentia website stays within the Izentia website. We store your data only for the perpose of providing you with correct test results. We DO NOT sell your data to any third-party organisation and we do not use your data when not calculating tests. The data is strictly secured and not everyone has access to it. Even if you are a contributor you do not have access to the content of the database, only to the general table layout and structure for development perposes. Please refer to the more indepth Data and Security section in the website.
+All user data within Izentia remains strictly on the platform. Your personal information is stored only for the purpose of providing accurate test results. We do not sell or share your data with any third parties, nor is it used beyond its intended purpose. \
+Access to stored data is limited to essential processes only. Even contributors and developers working on the platform do not have access to the contents of the user database — only the structural schema necessary for development. \
+For more detailed information, please refer to the full Data & Security section available on the Izentia website.
+
+
