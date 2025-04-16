@@ -26,5 +26,8 @@ namespace HealthTestApp.Data.Models
         public DateTime TakenAt { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public Test Test { get; set; }
+
+        public string? TestDataJson { get; set; }
+
     }
 }

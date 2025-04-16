@@ -4,7 +4,7 @@
 @using HealthTestApp.Components.Pages.Tests.TestComponents
 @rendermode InteractiveServer
 @inject LayoutState LayoutState
-@* @attribute [Authorize] *@
+@attribute [Authorize]
 @page "/tests/ruffier-dickson"
 @layout HealthTestApp.Components.Layout.MainLayout
 
@@ -190,10 +190,83 @@
             </div>
 
         }
+
         else if (currentStep == 5)
         {
+            <h2 class="heart-result-header">Your heart recovery is: <span style="color: @HeartResultColor">@HeartInterception</span> &</h2>
+            <h2 class="heart-result-header">Your blood vessels hardness is: <span style="color: @VesselResultColor">@VesselInterception</span> </h2>
+            <p class="heart-result">Your heart score: <strong style="color: #2790FF">@HeartIndex</strong></p>
+            <p class="heart-result">Your vessel score: <strong class="bold-text">@(Math.Round(VesselScore, 2))</strong></p>
+            <p>@HeartMessage</p>
+            <p>@VesselMessage</p>
 
-            <p>Your test score: @HeartIndex</p>
+            <div class="table-container">
+                <div style="overflow: hidden; border-radius: 20px; box-shadow: 0 4px 12px #D4DAEE; display: inline-block;">
+                    <table cellpadding="10" style="border-collapse: collapse; text-align: center; background-color: white;">
+                        <thead style="background-color: #2790FF; color: white;">
+                            <tr>
+                                <th>Heart Recovery Index</th>
+                                <th>Interpretation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0 – 5</td>
+                                <td>Excellent</td>
+                            </tr>
+                            <tr>
+                                <td>6 – 10</td>
+                                <td>Good</td>
+                            </tr>
+                            <tr>
+                                <td>11 – 15</td>
+                                <td>Satisfactory</td>
+                            </tr>
+                            <tr>
+                                <td>16 – 20</td>
+                                <td>Weak</td>
+                            </tr>
+                            <tr>
+                                <td>21 and above</td>
+                                <td>Very Poor</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="overflow: hidden; border-radius: 20px; box-shadow: 0 4px 12px #D4DAEE; display: inline-block; margin-left: 2rem;">
+                    <table cellpadding="10" style="border-collapse: collapse; text-align: center; background-color: white;">
+                        <thead style="background-color: #632FFF; color: white;">
+                            <tr>
+                                <th>Blood Vessel Hardness Index</th>
+                                <th>Interpretation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>less than 30</td>
+                                <td>Too low</td>
+                            </tr>
+                            <tr>
+                                <td>30 - 50</td>
+                                <td>Normal</td>
+                            </tr>
+                            <tr>
+                                <td>50 and above</td>
+                                <td>Hard vessels</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+            <h3 class ="heart-result-header">Heart Recovery Diagram</h3>
+            <Chart Data1="@TestData.AveragePowers" Data2="TestData.TotalWorks"/>
+
+            <br/>
+            
+            <div style="display: flex; justify-content: center;">
+                <Button Text="Finish Test" Color="#632FFF" OnClick="OnSave" />
+            </div>
         }
     </div>
 
@@ -218,6 +291,10 @@
     private double VesselScore;
     private string HeartInterception = string.Empty;
     private string HeartResultColor = string.Empty;
+    private string HeartMessage = string.Empty;
+    private string VesselInterception = string.Empty;
+    private string VesselResultColor = string.Empty;
+    private string VesselMessage = string.Empty;
 
     private void StartTimer() => timer?.Start();
     private void PauseTimer() => timer?.Pause();
@@ -309,24 +386,57 @@
 
         if (HeartIndex >= 1 && HeartIndex <= 5)
         {
-            HeartInterception = "Perfect";
-            HeartResultColor = "#53ff3b";
+            HeartInterception = "Excellent";
+            HeartResultColor = "#00c853";
+            HeartMessage = "You have excellent heart recovery! Your cardiovascular system is in top shape, showing efficient heart performance and strong physical endurance. Keep maintaining your healthy lifestyle—your heart thanks you!"; 
         }
-        else if (HeartIndex >= 6 && HeartIndex <= 10)
+        else if (HeartIndex > 5 && HeartIndex <= 10)
         {
             HeartInterception = "Good";
-            HeartResultColor = "#cdff3b";
+            HeartResultColor = "#64dd17";
+            HeartMessage = "You have good heart recovery.Your cardiovascular fitness is above average, which means your heart copes well with physical stress. With a bit more training or activity, you could reach the excellent range!";
         }
-        else if (HeartIndex >= 11 && HeartIndex <= 15)
+        else if (HeartIndex > 10 && HeartIndex <= 15)
         {
-            HeartInterception = "Bad";
-            HeartResultColor = "#ff471f";
+            HeartInterception = "Satisfactory";
+            HeartResultColor = "#FFD600";
+            HeartMessage = "Your heart recovery is satisfactory. While your results are within normal limits, there’s room for improvement. Consider regular aerobic exercise and healthy habits to boost your cardiovascular health.";
         }
-        else if (HeartIndex > 15)
+        else if (HeartIndex > 15 && HeartIndex <= 20)
         {
-            HeartInterception = "Consult a doctor right away!";
-            HeartResultColor = "#d50606";
+            HeartInterception = "Weak";
+            HeartResultColor = "#FF6D00";
+            HeartMessage = "Your heart recovery is below average. This may indicate that your cardiovascular system is under some strain. It might be a good time to introduce consistent physical activity and possibly consult with a healthcare provider for personalized advice.";
+
+        }
+        else if (HeartIndex > 20)
+        {
+            HeartInterception = "Very Poor";
+            HeartResultColor = "#D50000";
+            HeartMessage = "Your heart recovery is very poor. Your heart may be having a hard time adapting to physical effort. Please consider reaching out to a healthcare professional to evaluate your cardiovascular health and receive guidance on next steps.";
+        }
+        if (VesselScore < 30)
+        {
+            VesselInterception = "Too low";
+            VesselResultColor = "#FF6D00";
+            VesselMessage = "Your blood vessel elasticity is unusually high. While flexibility is good, this level might indicate abnormally low vascular tone. It’s recommended to monitor your blood pressure regularly and speak with a healthcare provider to ensure everything is functioning properly.";
+        }
+        else if (VesselScore >= 30 && VesselScore <= 50)
+        {
+            VesselInterception = "Normal";
+            VesselResultColor = "#00c853";
+            VesselMessage = "You have a normal blood vessel health index! Your vascular system is functioning as expected, with good elasticity and resistance. Keep up your healthy lifestyle to maintain this balance!";
+        }
+        else if (VesselScore > 50)
+        {
+            VesselInterception = "Too high";
+            VesselResultColor = "#D50000";
+            VesselMessage = "Your results suggest increased blood vessel stiffness. This may point to reduced elasticity, which can put extra strain on your heart. Consider speaking with a medical professional about lifestyle changes or further testing to support your cardiovascular health.";
         }
         currentStep++;
+    }
+    private void OnSave()
+    {
+        
     }
 }

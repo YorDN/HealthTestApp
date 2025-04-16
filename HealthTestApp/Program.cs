@@ -6,6 +6,9 @@ using HealthTestApp.Components.Account;
 using HealthTestApp.Data;
 using HealthTestApp.Data.Models;
 using HealthTestApp.Service;
+using Blazorise;
+using Blazorise.Bootstrap5;
+using Blazorise.Icons.FontAwesome;
 
 namespace HealthTestApp;
 
@@ -52,7 +55,13 @@ public class Program
            .AddEntityFrameworkStores<ApplicationDbContext>()
            .AddSignInManager()
            .AddDefaultTokenProviders();
-
+        builder.Services
+            .AddBlazorise(options =>
+            {
+                options.Immediate = true;
+            })
+            .AddBootstrap5Providers()
+            .AddFontAwesomeIcons();
         builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
         builder.Services.ConfigureApplicationCookie(options =>
         {

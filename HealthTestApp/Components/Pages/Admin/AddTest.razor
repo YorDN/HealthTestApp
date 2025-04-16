@@ -1,0 +1,39 @@
+﻿@page "/add/test"
+@rendermode InteractiveServer
+@inject LayoutState LayoutState
+@layout HealthTestApp.Components.Layout.MainLayout
+@using HealthTestApp.Components.Pages.Tests.TestComponents
+@using HealthTestApp.Service
+
+<div class="shell">
+    <div class="test-container">
+        <div class="input-container">
+            <h3>Add a test to the system</h3>
+            <br />
+            <div class="input">
+                <Input Placeholder="Test Name" @bind-Value="TestName" />
+            </div >
+            <div class="input">
+                <Input Placeholder="Test Description (optional)" @bind-Value="Description" />
+            </div>
+            <div class="input">
+                <Input Placeholder="Test Type" @bind-Value="Type" />
+            </div>
+        </div>
+        <Button Color="#D50000" Text="Add Test"  Type="submit" OnClick="OnSave"></Button>
+    </div>
+</div>
+@code {
+    private string TestName = string.Empty;
+    private string? Description;
+    private string Type = string.Empty;
+    protected override void OnInitialized()
+    {
+        LayoutState.SetCustomLayout("Add a test", "Admin", "#D50000");
+
+    }
+    private void OnSave()
+    {
+        
+    }
+}

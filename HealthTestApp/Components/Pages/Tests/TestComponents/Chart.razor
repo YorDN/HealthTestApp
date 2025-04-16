@@ -1,1 +1,107 @@
-﻿
+﻿@page "/chart"
+@using Blazorise.Charts.Annotation
+@using Blazorise.Charts
+@using Blazorise
+@rendermode InteractiveServer
+
+<LineChart @ref="lineChart" TItem="double" Options="@lineChartOptions">
+</LineChart>
+
+@code {
+    private LineChart<double> lineChart;
+
+    [Parameter]
+    public List<double> Data1 { get; set; } = new List<double>();
+    [Parameter]
+    public List<double> Data2 { get; set; } = new List<double>();
+
+    LineChartOptions lineChartOptions = new()
+        {
+            AspectRatio = 3d / 1d,
+            Layout = new()
+            {
+                Padding = new()
+                {
+                    Top = 16,
+                    Right = 8,
+                    Bottom = 8,
+                    Left = 4
+                }
+            },
+            Elements = new()
+            {
+                Line = new()
+                {
+                    Fill = false,
+                    Tension = 0.4,
+                }
+            },
+            Scales = new()
+            {
+                Y = new()
+                {
+                    Stacked = false,
+                }
+            },
+            Plugins = new()
+            {
+                Legend = new()
+                {
+                    Display = false
+                }
+            }
+        };
+
+    Dictionary<string, ChartAnnotationOptions> lineAnnotationOptions = new()
+    {
+        { "line1", new LineChartAnnotationOptions
+            {
+                Type = "line",
+                YMin = 0,
+                YMax = 4,
+                BorderColor = new( 255, 99, 132 ),
+                BorderWidth = 5,
+            }
+        }
+    };
+
+    private static string[] Labels = new string[] { "1", "2", "3", "4", "5", "6", "7", "8" };
+    private static string[] BackgroundColors = new string[] { "#4bc0c0", "#36a2eb", "#ff3d88" };
+    private static string[] BorderColors = new string[] { "#4bc0c0", "#36a2eb", "#ff3d88" };
+    private Random random = new(DateTime.Now.Millisecond);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await lineChart.Clear();
+            await lineChart.AddLabelsDatasetsAndUpdate(Labels, GetLineChartDataset(0), GetLineChartDataset(1));
+        }
+    }
+
+    private LineChartDataset<double> GetLineChartDataset(int colorIndex)
+    {
+        if (colorIndex == 1)
+        {
+            return new()
+                {
+                    Label = "Avarage power (W)",
+                    Data = Data1,
+                    BackgroundColor = BackgroundColors[colorIndex],
+                    BorderColor = BorderColors[colorIndex],
+                };
+        }
+        else
+        {
+            return new()
+                {
+                    Label = "Total work (J)",
+                    Data = Data2,
+                    BackgroundColor = BackgroundColors[colorIndex],
+                    BorderColor = BorderColors[colorIndex],
+                };
+        }
+    }
+
+}
+
