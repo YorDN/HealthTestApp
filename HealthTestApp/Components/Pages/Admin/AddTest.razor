@@ -2,8 +2,10 @@
 @rendermode InteractiveServer
 @inject LayoutState LayoutState
 @layout HealthTestApp.Components.Layout.MainLayout
+@attribute [Authorize(Roles = "Admin")]
 @using HealthTestApp.Components.Pages.Tests.TestComponents
 @using HealthTestApp.Service
+@using Microsoft.AspNetCore.Authorization
 
 <div class="shell">
     <div class="test-container">
