@@ -27,6 +27,7 @@ public class Program
         builder.Services.AddScoped<IdentityUserAccessor>();
         builder.Services.AddScoped<IdentityRedirectManager>();
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+        builder.Services.AddScoped<RuffierDicksonTestService>();
         builder.Services.AddScoped<TestService>();
         builder.Services.AddSingleton<LayoutState>();
 

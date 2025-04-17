@@ -19,6 +19,8 @@ namespace HealthTestApp.Data.Models
         [ForeignKey("Test")]
         public Guid TestId { get; set; }
 
+        public string? TestName { get; set; }
+
         public int Score { get; set; }
 
         public string? Result { get; set; }

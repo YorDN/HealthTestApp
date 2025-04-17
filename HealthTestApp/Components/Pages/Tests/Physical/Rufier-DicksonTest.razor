@@ -1,11 +1,19 @@
-﻿@using HealthTestApp.Data.Models
+﻿@page "/tests/ruffier-dickson"
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+@using HealthTestApp.Data.DTOs
+@using HealthTestApp.Data.Models
 @using HealthTestApp.Service
+@using HealthTestApp.Service.TestServices
 @using Microsoft.AspNetCore.Authorization
 @using HealthTestApp.Components.Pages.Tests.TestComponents
-@rendermode InteractiveServer
+
 @inject LayoutState LayoutState
-@attribute [Authorize]
-@page "/tests/ruffier-dickson"
+@inject RuffierDicksonTestService TestService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
 @layout HealthTestApp.Components.Layout.MainLayout
 
 <PageTitle>Ruffier-Dickson Test</PageTitle>
@@ -263,7 +271,7 @@
             <Chart Data1="@TestData.AveragePowers" Data2="TestData.TotalWorks"/>
 
             <br/>
-            
+
             <div style="display: flex; justify-content: center;">
                 <Button Text="Finish Test" Color="#632FFF" OnClick="OnSave" />
             </div>
@@ -288,6 +296,7 @@
     private double HeartIndex;
     private string value = "";
     private string? ErrorMessage;
+    private string? ErrorSaveMessage;
     private double VesselScore;
     private string HeartInterception = string.Empty;
     private string HeartResultColor = string.Empty;
@@ -435,8 +444,24 @@
         }
         currentStep++;
     }
-    private void OnSave()
+    private async Task OnSave()
     {
-        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userIdString = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        ResultDto result = new();
+        if (Guid.TryParse(userIdString, out Guid userId))
+        {
+            result =  await TestService.SaveTestAsync(userId, TestData);
+        }
+        if (!result.IsValid)
+        {
+            ErrorSaveMessage = result.Message;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
     }
 }
