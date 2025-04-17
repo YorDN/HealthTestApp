@@ -9,6 +9,7 @@ using HealthTestApp.Service;
 using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
+using HealthTestApp.Service.TestServices;
 
 namespace HealthTestApp;
 
@@ -26,6 +27,7 @@ public class Program
         builder.Services.AddScoped<IdentityUserAccessor>();
         builder.Services.AddScoped<IdentityRedirectManager>();
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+        builder.Services.AddScoped<TestService>();
         builder.Services.AddSingleton<LayoutState>();
 
         builder.Services.AddAuthentication(options =>
@@ -40,10 +42,6 @@ public class Program
             options.UseSqlServer(connectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-        builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddSignInManager()
-            .AddDefaultTokenProviders();
         builder.Services.AddIdentityCore<ApplicationUser>(options =>
         {
             options.SignIn.RequireConfirmedAccount = true;
@@ -105,6 +103,7 @@ public class Program
         using (var scope = app.Services.CreateScope())
         {
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roles = new[]
             {
                 "Admin",

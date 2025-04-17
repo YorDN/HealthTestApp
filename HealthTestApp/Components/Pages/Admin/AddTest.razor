@@ -1,11 +1,21 @@
 ﻿@page "/add/test"
 @rendermode InteractiveServer
-@inject LayoutState LayoutState
-@layout HealthTestApp.Components.Layout.MainLayout
 @attribute [Authorize(Roles = "Admin")]
+
+@using HealthTestApp.Components.Account
 @using HealthTestApp.Components.Pages.Tests.TestComponents
+@using HealthTestApp.Data.DTOs
 @using HealthTestApp.Service
+@using HealthTestApp.Service.TestServices
 @using Microsoft.AspNetCore.Authorization
+
+@inject LayoutState LayoutState
+@inject TestService TestService
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@layout HealthTestApp.Components.Layout.MainLayout
 
 <div class="shell">
     <div class="test-container">
@@ -13,29 +23,39 @@
             <h3>Add a test to the system</h3>
             <br />
             <div class="input">
-                <Input Placeholder="Test Name" @bind-Value="TestName" />
+                <Input Placeholder="Test Name" @bind-Value="dto.Name" />
             </div >
             <div class="input">
-                <Input Placeholder="Test Description (optional)" @bind-Value="Description" />
+                <Input Placeholder="Test Description (optional)" @bind-Value="dto.Description" />
             </div>
-            <div class="input">
-                <Input Placeholder="Test Type" @bind-Value="Type" />
-            </div>
+            <select id="testType" @bind="dto.Type" class="form-select">
+                <option value="">Select a test type</option>
+                <option value="Physical">Physical</option>
+                <option value="Psychological">Psychological</option>
+            </select>
         </div>
         <Button Color="#D50000" Text="Add Test"  Type="submit" OnClick="OnSave"></Button>
     </div>
 </div>
 @code {
-    private string TestName = string.Empty;
-    private string? Description;
-    private string Type = string.Empty;
+    private AddTestDto dto = new();
+    private ResultDto result;
+    private string errorMessage;
     protected override void OnInitialized()
     {
         LayoutState.SetCustomLayout("Add a test", "Admin", "#D50000");
 
     }
-    private void OnSave()
+    private async Task OnSave()
     {
-        
+        result = await TestService.AddTestAsync(dto);
+        if (!result.IsValid)
+        {
+            errorMessage = result.Message;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
     }
 }
