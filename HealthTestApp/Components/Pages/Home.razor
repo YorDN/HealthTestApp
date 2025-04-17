@@ -1,4 +1,77 @@
 ﻿@page "/"
-@using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 
+@using HealthTestApp.Components.Account
+@using HealthTestApp.Data.Models
+@using HealthTestApp.Service
+@using Microsoft.AspNetCore.Authorization
+
+@inject LayoutState LayoutState
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@layout HealthTestApp.Components.Layout.MainLayout
+
+
+<div class="dashboard-container">
+    @*Top half*@
+    <div class="top">
+        <!--  LEFT  -->
+        <div class="top-left-section">
+            @* Profile *@
+            <div>
+                <div>
+                    <img src=""/>
+                </div>
+                <div>
+                    <h3>Welcome back</h3>
+                    <h3>@user.Identity.Name</h3>
+                </div>
+            </div>
+            @* How you feel *@
+            <div>
+
+            </div>
+        </div>
+        <!--  RIGHT  -->
+        <div class="top-right-section">
+            @* Top Tests *@
+            <div>
+
+            </div>
+        </div>
+    </div>
+    @*Bottom half*@
+    <div class="bottom">
+        <!-- B LEFT  -->
+        <div>
+            @* Last Test *@
+            <div>
+
+            </div>
+            @* Next Test *@
+            <div>
+
+            </div>
+        </div>
+        <!-- B RIGHT  -->
+        <div>
+            @* Chart *@
+            <div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code{
+    private AuthenticationState authState;
+    private System.Security.Claims.ClaimsPrincipal? user;
+    protected override async Task OnInitializedAsync()
+    {
+        LayoutState.SetLayout("Home", "Explore your Dahsboard");
+        authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+    }
+}
