@@ -1,77 +1,174 @@
 ﻿@page "/"
 @attribute [Authorize]
+@rendermode InteractiveServer
 
+@using Blazored.LocalStorage
 @using HealthTestApp.Components.Account
 @using HealthTestApp.Data.Models
 @using HealthTestApp.Service
+@using HealthTestApp.Service.TestServices
+@using HealthTestApp.Service.UserServices
 @using Microsoft.AspNetCore.Authorization
+@using HealthTestApp.Components.Pages.Tests.TestComponents
 
 @inject LayoutState LayoutState
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserService UserService
+@inject ILocalStorageService LocalStorage
+@inject TestService TestService
 
 @layout HealthTestApp.Components.Layout.MainLayout
 
-
-<div class="dashboard-container">
-    @*Top half*@
-    <div class="top">
-        <!--  LEFT  -->
-        <div class="top-left-section">
-            @* Profile *@
-            <div>
-                <div>
-                    <img src=""/>
+@if (CurrentUser == null || tests == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="dashboard-container">
+        @*Top half*@
+        <div class="top">
+            <!--  LEFT  -->
+            <div class="top-left-section">
+                @* Profile *@
+                <div class="profile-section">
+                    <div class="profile-picture">
+                        <img src="@CurrentUser.ProfilePicture" />
+                    </div>
+                    <div class="greet-container">
+                        <h3 id="welcome">Welcome back</h3>
+                        <h3 id="username">@CurrentUser.UserName!</h3>
+                        <Button Text="Check your profile" Color="#2790FF" />
+                    </div>
                 </div>
-                <div>
-                    <h3>Welcome back</h3>
-                    <h3>@user.Identity.Name</h3>
+                @* How you feel *@
+                <div class="checkup-section">
+                    <div class="checkup-header">
+                        <h3>How do you feel today?</h3>
+                    </div>
+                    <div class="feeling-button-container">
+                        @if(MoodMessage is not null)
+                        {
+                            <div style="display: flex; justify-content: center;">
+                                <p style="max-width: 600px; text-align: center;">@MoodMessage</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <button @onclick='async () => await SelectMood("😰")'>😰</button>
+                            <button @onclick='async () => await SelectMood("😕")'>😕</button>
+                            <button @onclick='async () => await SelectMood("😐")'>😐</button>
+                            <button @onclick='async () => await SelectMood("😊")'>😊</button>
+                            <button @onclick='async () => await SelectMood("😍")'>😍</button>
+                        }
+                    </div>
                 </div>
             </div>
-            @* How you feel *@
-            <div>
+            <!--  RIGHT  -->
+            <div class="top-right-section">
+                @* Top Tests *@
+                <div class="top-tests-section">
+                    <div class="top-tests-header">
 
+                    </div>
+                    <div>
+                        @foreach (var test in tests)
+                        {
+                            <p>@test.Name</p>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
-        <!--  RIGHT  -->
-        <div class="top-right-section">
-            @* Top Tests *@
+        @*Bottom half*@
+        <div class="bottom">
+            <!-- B LEFT  -->
             <div>
-
+                @* Last Test *@
+                <div>
+                </div>
+                @* Next Test *@
+                <div>
+                </div>
+            </div>
+            <!-- B RIGHT  -->
+            <div>
+                @* Chart *@
+                <div>
+                </div>
             </div>
         </div>
     </div>
-    @*Bottom half*@
-    <div class="bottom">
-        <!-- B LEFT  -->
-        <div>
-            @* Last Test *@
-            <div>
-
-            </div>
-            @* Next Test *@
-            <div>
-
-            </div>
-        </div>
-        <!-- B RIGHT  -->
-        <div>
-            @* Chart *@
-            <div>
-
-            </div>
-        </div>
-    </div>
-</div>
+}
 
 
 
 @code{
-    private AuthenticationState authState;
-    private System.Security.Claims.ClaimsPrincipal? user;
+    private ApplicationUser? CurrentUser;
+    private string? SelectedMood;
+    private string? MoodMessage;
+    private List<Test> tests = new();
     protected override async Task OnInitializedAsync()
     {
         LayoutState.SetLayout("Home", "Explore your Dahsboard");
-        authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        user = authState.User;
+        CurrentUser = await UserService.GetCurrentUserAsync();
+        tests = await TestService.GetAllTests();
+    }
+    private bool _hasInitialized = false;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_hasInitialized)
+        {
+            _hasInitialized = true;
+
+            try
+            {
+                var mood = await LocalStorage.GetItemAsync<string>("userMood");
+                var timestamp = await LocalStorage.GetItemAsync<DateTime>("moodTimestamp");
+
+                if (!string.IsNullOrWhiteSpace(mood) && (DateTime.UtcNow - timestamp).TotalHours < 24)
+                {
+                    await SelectMood(mood, false); // false = don't store again
+                    StateHasChanged(); // trigger UI update
+                }
+                else
+                {
+                    await LocalStorage.RemoveItemAsync("userMood");
+                    await LocalStorage.RemoveItemAsync("moodTimestamp");
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                // Swallow or log - we're probably in prerender mode
+            }
+        }
+    }
+    private async Task SelectMood(string mood, bool save = true)
+    {
+        SelectedMood = mood;
+        switch (mood)
+        {
+            case "😰":
+                MoodMessage = "We are so sorry to hear that 💔! Know that we are standing by you and support you! If you wish you can contact us, we are here to help you get better!";
+                break;
+            case "😕":
+                MoodMessage = "Not a very good day? Everyone has those types of days. Maybe take a break, relax, or do what you love. We hope you get through this as fast as possible 😊!";
+                break;
+            case "😐":
+                MoodMessage = "Feeling natural? Well somethimes thats for the better - you are not very happy, BUT you are not sad either! We truly hope you get through this day and the next to be even better for you 💖!";
+                break;
+            case "😊":
+                MoodMessage = "You are happy 😊! Thats what we want to hear! Enjoy your day and make the most of it 🌞!";
+                break;
+            case "😍":
+                MoodMessage = "You feel amazing 😍! We are very happy for you and we truly wish everyday to be this good for you 😇! Enjoy your beautyful day 🤗!";
+                break;
+            default:
+                break;
+        }
+        if (save)
+        {
+            await LocalStorage.SetItemAsync("userMood", mood);
+            await LocalStorage.SetItemAsync("moodTimestamp", DateTime.UtcNow);
+        }
     }
 }

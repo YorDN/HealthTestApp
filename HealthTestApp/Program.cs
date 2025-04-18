@@ -10,6 +10,8 @@ using Blazorise;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using HealthTestApp.Service.TestServices;
+using HealthTestApp.Service.UserServices;
+using Blazored.LocalStorage;
 
 namespace HealthTestApp;
 
@@ -28,8 +30,11 @@ public class Program
         builder.Services.AddScoped<IdentityRedirectManager>();
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
         builder.Services.AddScoped<RuffierDicksonTestService>();
+        builder.Services.AddScoped<UserService>();
         builder.Services.AddScoped<TestService>();
         builder.Services.AddSingleton<LayoutState>();
+        builder.Services.AddBlazoredLocalStorage();
+
 
         builder.Services.AddAuthentication(options =>
             {

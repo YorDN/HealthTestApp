@@ -43,5 +43,13 @@ namespace HealthTestApp.Service.TestServices
             result.Message = "Test added successfully!";
             return result;
         }
+        public async Task<List<Test>> GetAllTests()
+        {
+            return await _dbContext.Tests.ToListAsync();
+        }
+        public async Task<List<Test>> GetNTests(int n)
+        {
+            return await _dbContext.Tests.Take(n).ToListAsync();
+        }
     }
 }

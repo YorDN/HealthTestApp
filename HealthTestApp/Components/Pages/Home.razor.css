@@ -1,1 +1,76 @@
-﻿
+﻿.dashboard-container{
+    display: flex;
+    flex-direction: column;
+
+}
+.top{
+    display: flex;
+}
+.top-left-section{
+    display: flex;
+    flex-direction: column;
+}
+.profile-section {
+    display: flex;
+    background-color: white;
+    border-radius: 28px;
+    padding: 20px 30px;
+    flex: 1;
+    box-shadow: #D4DAEE 0px 0px 10px;
+}
+.profile-picture{
+    display: flex;
+    flex: 1;
+    padding: 20px;
+}
+.profile-picture img {
+    display: flex;
+    flex: 1;
+    max-width: 150px;
+    border-radius: 50%;
+    border: 5px solid #2790FF;
+}
+.greet-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.greet-container h3{
+    text-align: center;
+    color: #404040;
+}
+#welcome{
+    font-weight: bold;
+}
+#username {
+    color: #2790FF;
+
+}
+/* The checkup section */
+.checkup-section {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    margin-top: 20px;
+    border-radius: 28px;
+    padding: 20px 30px;
+    flex: 1;
+    box-shadow: #D4DAEE 0px 0px 10px;
+}
+.feeling-button-container{
+    display: flex;
+    justify-content: space-evenly;
+}
+.feeling-button-container button{
+    font-size: 50px;
+    border: none;
+    background-color: white;
+}
+.checkup-header h3{
+     text-align: center;
+     color: #4c4c4c;
+     font-size: 1.5rem;
+}
+.checkup-header{
+    margin-bottom: 10px;
+}
