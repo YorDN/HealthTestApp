@@ -1,11 +1,13 @@
-﻿@inherits LayoutComponentBase
-@layout AccountLayout
+﻿@using HealthTestApp.Service
+@inherits LayoutComponentBase
+@* @layout AccountLayout *@
+@inject LayoutState LayoutState
 
-<h1>Manage your account</h1>
+@layout HealthTestApp.Components.Layout.MainLayout
+
 
 <div>
-    <h2>Change your account settings</h2>
-    <hr />
+    <br/>
     <div class="row">
         <div class="col-md-3">
             <ManageNavMenu />
@@ -15,3 +17,10 @@
         </div>
     </div>
 </div>
+
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        LayoutState.SetCustomLayout("Manage your account", "Change your account settings", "#2790FF");
+    }
+}
