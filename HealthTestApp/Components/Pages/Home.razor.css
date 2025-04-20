@@ -9,6 +9,7 @@
 .top-left-section{
     display: flex;
     flex-direction: column;
+    flex: 2;
 }
 .profile-section {
     display: flex;
@@ -20,12 +21,11 @@
 }
 .profile-picture{
     display: flex;
-    flex: 1;
     padding: 20px;
 }
 .profile-picture img {
     display: flex;
-    flex: 1;
+
     max-width: 150px;
     border-radius: 50%;
     border: 5px solid #2790FF;
@@ -73,4 +73,77 @@
 }
 .checkup-header{
     margin-bottom: 10px;
+}
+/* Top Tests section */
+.top-tests-section {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 28px;
+    padding: 20px 30px;
+    margin-left: 20px;
+    flex: 1;
+    box-shadow: #D4DAEE 0px 0px 10px;
+}
+.top-right-section{
+    display: flex;
+    flex: 1.5;
+    
+}
+.test-box {
+    display: flex;
+    flex: 1;
+    box-shadow: #D4DAEE 0px 0px 10px;
+    border-radius: 15px;
+}
+.test-badge {
+    width: 10px;
+    background-color: dodgerblue;
+    border-radius: 15px 0px 0px 15px;
+}
+.test-box-content{
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+}
+.tests-container{
+    display: flex;
+    flex-direction: column;
+}
+.test-name p{
+    margin: 0;
+}
+.test-name {
+    padding: 10px;
+}
+#tname{
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin-bottom: 2px;
+    color: #404040;
+}
+.test-chevron {
+    padding: 7px;
+    box-shadow: #D4DAEE 0px 0px 10px;
+    margin: 10px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    cursor:pointer;
+}
+.bx-chevron-right{
+    font-size: 46px;
+
+}
+#test-type {
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+.top-tests-header h3{
+    text-align: center;
+}
+.top-tests-header{
+    margin-bottom: 10px
 }

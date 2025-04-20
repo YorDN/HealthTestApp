@@ -68,13 +68,49 @@ else
                 @* Top Tests *@
                 <div class="top-tests-section">
                     <div class="top-tests-header">
+                        <h3>Top tests:</h3>
+                    </div>
+                    <div style="height: 100%;">
+                        <div class="tests-container">
+                            @foreach (var test in tests)
+                            {
+                                <div class="test-box">
+                                    @if (test.Type.ToString() == "Physical")
+                                    {
 
+                                        <div class="test-badge" style="background-color: #5427DB"></div>
+                                        <div class="test-box-content">
+                                            <div class="test-name">
+                                                <p id="tname">@test.Name</p>
+                                                @* <a href="/tests/@test.Name">something</a> *@
+                                                <p id="test-type" style="color: #5427DB">@test.Type</p>
+                                            </div>
+                                            <a class="test-chevron" href="/tests/@test.Name">
+                                                <i class='bx bx-chevron-right' style="color: #5427DB"></i>
+                                            </a>
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        <div class="test-badge" style="background-color: #2790FF"></div>
+                                        <div class="test-box-content">
+                                            <div class="test-name">
+                                                <p id="tname">@test.Name</p>
+                                                @* <a href="/tests/@test.Name">something</a> *@
+                                                <p id="test-type" style="color: #2790FF">@test.Type</p>
+                                            </div>
+                                            <a class="test-chevron" href="/tests/@test.Name">
+                                                <i class='bx bx-chevron-right' style="color: #2790FF"></i>
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
                     </div>
                     <div>
-                        @foreach (var test in tests)
-                        {
-                            <p>@test.Name</p>
-                        }
+                        <Button Text="View All"></Button>
                     </div>
                 </div>
             </div>
