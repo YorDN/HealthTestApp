@@ -15,6 +15,7 @@
 @inject UserService UserService
 @inject ILocalStorageService LocalStorage
 @inject TestService TestService
+@inject NavigationManager Navigation
 
 @layout HealthTestApp.Components.Layout.MainLayout
 
@@ -110,7 +111,7 @@ else
                         </div>
                     </div>
                     <div>
-                        <Button Text="View All"></Button>
+                        <Button Text="View All" OnClick="AllTestsNavigate"></Button>
                     </div>
                 </div>
             </div>
@@ -143,7 +144,7 @@ else
     {
         LayoutState.SetLayout("Home", "Explore your Dahsboard");
         CurrentUser = await UserService.GetCurrentUserAsync();
-        tests = await TestService.GetAllTests();
+        tests = await TestService.GetNTests(3);
     }
     private bool _hasInitialized = false;
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -202,5 +203,9 @@ else
             await LocalStorage.SetItemAsync("userMood", mood);
             await LocalStorage.SetItemAsync("moodTimestamp", DateTime.UtcNow);
         }
+    }
+    private void AllTestsNavigate()
+    {
+        Navigation.NavigateTo("/tests");
     }
 }

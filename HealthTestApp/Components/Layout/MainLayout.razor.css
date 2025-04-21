@@ -37,6 +37,9 @@ main {
     }
 
 @media (max-width: 640.98px) {
+    .page {
+        overflow: scroll;
+    }
     .top-row {
         justify-content: space-between;
     }
@@ -49,6 +52,7 @@ main {
 @media (min-width: 641px) {
     .page {
         flex-direction: row;
+
     }
 
     .sidebar {

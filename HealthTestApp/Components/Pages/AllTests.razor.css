@@ -1,0 +1,250 @@
+﻿/* Tests.razor.css */
+.tests-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.filters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+
+.search-bar {
+    position: relative;
+    max-width: 100%;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.5rem;
+    box-shadow: #D4DAEE 0px 0px 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-bar input:focus {
+    outline: none;
+    box-shadow: #c3cceb 0px 0px 10px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    font-size: 1.25rem;
+}
+
+.filter-options {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-select {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 6px;
+    box-shadow: #D4DAEE 0px 0px 10px;
+    background-color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    min-width: 150px;
+}
+.duration-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-left: auto;
+}
+
+.duration-filter label {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.duration-filter input[type="range"] {
+    width: 150px;
+}
+
+.tests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.test-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow:#D4DAEE 0px 0px 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.test-card:hover {
+    transform: translateY(-5px);
+    box-shadow: #c3cceb 0px 0px 10px;
+}
+
+.test-card-header {
+    margin-bottom: 1rem;
+}
+
+.test-card-header h3 {
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+}
+
+.test-meta {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.test-type {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.test-type.psychological {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.test-type.physical {
+    background-color: #c9b8ff;
+    color: #5427db;
+}
+
+.test-difficulty {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.test-difficulty.easy {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.test-difficulty.normal {
+    background-color: #fff8e1;
+    color: #ff8f00;
+}
+
+.test-difficulty.hard {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.test-description {
+    color: #555;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.test-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.test-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #777;
+}
+
+    .test-stats span {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+.start-button.psychological {
+    background-color: #2790FF;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.start-button.psychological:hover {
+    opacity: 0.8;
+    transform: translateY(-1px);
+}
+.start-button.physical {
+    background-color: #632FFF;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.start-button.physical:hover {
+    opacity: 0.8;
+    transform: translateY(-1px);
+}
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 0;
+}
+
+    .no-results img {
+        width: 150px;
+        opacity: 0.7;
+        margin-bottom: 1rem;
+    }
+
+    .no-results h4 {
+        color: #555;
+        margin-bottom: 0.5rem;
+    }
+
+    .no-results p {
+        color: #777;
+    }
+
+@media (max-width: 768px) {
+    .tests-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-options {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .duration-filter {
+        margin-left: 0;
+    }
+}

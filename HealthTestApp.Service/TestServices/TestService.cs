@@ -24,10 +24,22 @@ namespace HealthTestApp.Service.TestServices
                 result.Message = "A test with this name already exists in the Data base!";
                 return  result;
             }
+            if (testDto.Name is null || testDto.Type is null || testDto.Difficulty is null || testDto.Duration is null)
+            {
+                result.IsValid = false;
+                result.Message = "One or more non-nullable fields are empty!";
+                return result;
+            }
             if(!Enum.TryParse<TestType>(testDto.Type, out TestType type))
             {
                 result.IsValid = false;
                 result.Message = "Invalid test type!";
+                return result;
+            }
+            if (!int.TryParse(testDto.Duration, out int duration))
+            {
+                result.IsValid = false;
+                result.Message = "Invalid duration!";
                 return result;
             }
             Test test = new Test()
@@ -35,7 +47,9 @@ namespace HealthTestApp.Service.TestServices
                 Name = testDto.Name,
                 Description = testDto.Description,
                 Type = type,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                Difficulty = testDto.Difficulty,
+                EstimatedDuration = duration
             };
             await _dbContext.Tests.AddAsync(test);
             await _dbContext.SaveChangesAsync();

@@ -1,0 +1,146 @@
+﻿@page "/tests"
+@rendermode InteractiveServer
+
+@using HealthTestApp.Components.Pages.Tests.TestComponents
+@using HealthTestApp.Data
+@using HealthTestApp.Data.Models
+@using HealthTestApp.Data.Models.Enumerations
+@using System.Linq
+@using HealthTestApp.Service
+@using HealthTestApp.Service.TestServices
+
+@inject TestService TestService
+@inject NavigationManager Navigation
+@inject LayoutState LayoutState
+
+@layout HealthTestApp.Components.Layout.MainLayout
+
+<div class="shell">
+
+
+    <div class="tests-page">
+
+        <div class="filters-container">
+            <div class="search-bar">
+                <input type="text" @bind="searchQuery" @bind:event="oninput"
+                placeholder="Search by test name or description..." />
+                <span class="search-icon"><i class='bx bx-search'></i></span>
+            </div>
+
+            <div class="filter-options">
+                <select @bind="selectedType" class="form-select">
+                    <option value="">All Types</option>
+                    @foreach (var type in Enum.GetValues(typeof(TestType)))
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </select>
+
+                <select @bind="selectedDifficulty" class="form-select">
+                    <option value="">All Difficulties</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Hard">Hard</option>
+                </select>
+
+                <div class="duration-filter">
+                    <label>Max Duration:</label>
+                    <input type="range" min="1" max="60" @bind="maxDuration" />
+                    <span>@maxDuration min</span>
+                </div>
+
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <Button Text="Filter" OnClick="FilterTests" />
+            </div>
+        </div>
+
+        <div class="tests-grid">
+            @if (filteredTests.Count == 0)
+            {
+                <div class="no-results">
+                    <h4>No tests match your criteria</h4>
+                    <p>Try adjusting your filters or search term</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var test in filteredTests)
+                {
+                    <div class="test-card" @onclick="() => NavigateToTest(test.Name)">
+                        <div class="test-card-header">
+                            <h3 style="color: #404040">@test.Name</h3>
+                            <div class="test-meta">
+                                <span class="test-type @test.Type.ToString().ToLower()">@test.Type</span>
+                                <span class="test-difficulty @test.Difficulty.ToLower()">@test.Difficulty</span>
+                            </div>
+                        </div>
+                        <p class="test-description">@test.Description</p>
+                        <div class="test-card-footer">
+                            <div class="test-stats">
+                                <span class="test-duration">⏱️ @test.EstimatedDuration min</span>
+                            </div>
+                            <button class="start-button @test.Type.ToString().ToLower()" @onclick="() => NavigateToTest(test.Name)">
+                                Start Test
+                            </button>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+
+</div>
+
+<style>
+
+
+</style>
+
+@code {
+    private List<Test> allTests = new();
+    private List<Test> filteredTests = new();
+    private string searchQuery = "";
+    private TestType? selectedType = null;
+    private string selectedDifficulty = "";
+    private int maxDuration = 30;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load tests with related data
+        allTests = await TestService.GetAllTests();
+        LayoutState.SetCustomLayout("All Tests", "Explore and Search tests", "#2790FF");
+        FilterTests();
+    }
+    private void FilterTests()
+    {
+        var query = allTests.AsQueryable();
+
+        if (!string.IsNullOrEmpty(searchQuery))
+        {
+            query = query.Where(t =>
+            t.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+            (t.Description != null && t.Description.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        if (selectedType.HasValue)
+        {
+            query = query.Where(t => t.Type == selectedType.Value);
+        }
+
+        if (!string.IsNullOrEmpty(selectedDifficulty))
+        {
+            query = query.Where(t => t.Difficulty == selectedDifficulty);
+        }
+
+        query = query.Where(t => t.EstimatedDuration <= maxDuration);
+
+        filteredTests = query.ToList();
+    }
+
+    private void NavigateToTest(string name)
+    {
+        Navigation.NavigateTo($"/tests/{name}");
+    }
+}

@@ -22,17 +22,28 @@
         <div class="input-container">
             <h3>Add a test to the system</h3>
             <br />
+            <p style="color: red; text-align: center;">@errorMessage</p>
             <div class="input">
                 <Input Placeholder="Test Name" @bind-Value="dto.Name" />
             </div >
             <div class="input">
                 <Input Placeholder="Test Description (optional)" @bind-Value="dto.Description" />
             </div>
+            <div class="input">
+                <Input Placeholder="Duration (positive integer)" Type="number" Minimum="1" @bind-Value="dto.Duration" />
+            </div>
             <select id="testType" @bind="dto.Type" class="form-select">
                 <option value="">Select a test type</option>
                 <option value="Physical">Physical</option>
                 <option value="Psychological">Psychological</option>
             </select>
+            <select id="testType" @bind="dto.Difficulty" class="form-select" style="margin-top: 20px;">
+                <option value="">Select the difficulty</option>
+                <option value="Easy">Easy</option>
+                <option value="Normal">Normal</option>
+                <option value="Hard">Hard</option>
+            </select>
+
         </div>
         <Button Color="#D50000" Text="Add Test"  Type="submit" OnClick="OnSave"></Button>
     </div>
@@ -40,7 +51,7 @@
 @code {
     private AddTestDto dto = new();
     private ResultDto result;
-    private string errorMessage;
+    private string? errorMessage;
     protected override void OnInitialized()
     {
         LayoutState.SetCustomLayout("Add a test", "Admin", "#D50000");

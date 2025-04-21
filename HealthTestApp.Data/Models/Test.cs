@@ -19,6 +19,10 @@ namespace HealthTestApp.Data.Models
 
         public string? Description { get; set; }
 
+        public string Difficulty { get; set; } = "Normal";
+
+        public int EstimatedDuration { get; set; }
+
         [MaxLength(10)]
         [Required]
         public required TestType Type { get; set; }
