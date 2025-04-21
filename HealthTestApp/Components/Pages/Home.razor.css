@@ -95,6 +95,7 @@
     flex: 1;
     box-shadow: #D4DAEE 0px 0px 10px;
     border-radius: 15px;
+    margin-bottom: 15px;
 }
 .test-badge {
     width: 10px;
@@ -147,3 +148,5 @@
 .top-tests-header{
     margin-bottom: 10px
 }
+/* The bottom section */
+

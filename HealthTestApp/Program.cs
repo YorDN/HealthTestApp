@@ -30,6 +30,7 @@ public class Program
         builder.Services.AddScoped<IdentityRedirectManager>();
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
         builder.Services.AddScoped<RuffierDicksonTestService>();
+        builder.Services.AddScoped<LuscherColorTestService>();
         builder.Services.AddScoped<UserService>();
         builder.Services.AddScoped<TestService>();
         builder.Services.AddSingleton<LayoutState>();

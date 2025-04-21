@@ -20,6 +20,13 @@
 
 <div class="shell">
     <div class="test-container">
+
+        <div style="display: flex; justify-content: center;">
+            <div class="test-progress">
+                <div class="progress-bar" style="width: @(currentStep == 1 ? "20%" : currentStep == 2 ? "40%" : currentStep == 3 ? "60%" : currentStep == 4 ? "80%" : "100%")"></div>
+                <div style="display: flex; justify-content: center;">Step @currentStep of 5</div>
+            </div>
+        </div>
         @if(currentStep == 1)
         {
 
@@ -53,9 +60,7 @@
         }
         else if(currentStep == 2)
         {
-            <StepProgress CurrentStep="1" TotalSteps="3"
-            FilledColor="#632FFF"
-            UnfilledColor="lightgray" />
+            
             <br />
             <h2 style="font-weight: bold; color: #404040; margin-bottom: 20px; text-align: center;">Step 1: Measure your Heart rate and Blood pressure <span class="bold-text"> 3 times</span></h2>
             k = 0;
@@ -117,9 +122,6 @@
         }
         else if (currentStep == 3)
         {
-            <StepProgress CurrentStep="2" TotalSteps="3"
-            FilledColor="#632FFF"
-            UnfilledColor="lightgray" />
             <br />
             <h2 style="font-weight: bold; color: #404040; margin-bottom: 20px; text-align: center;">Step 2: Do squats for <span class="bold-text"> 45 seconds</span></h2>
             <p style="text-align: center;">Start the timer and do as much squats as your can for 45 seconds. If you have a analog blood pressure monitor, do not remove it from your arm if you can.</p>
@@ -149,9 +151,6 @@
         }
         else if(currentStep == 4)
         {
-            <StepProgress CurrentStep="3" TotalSteps="3"
-            FilledColor="#632FFF"
-            UnfilledColor="lightgray" />
             <br />
             <h2 style="font-weight: bold; color: #404040; margin-bottom: 20px; text-align: center;">Step 3: Measure your Heart rate and Blood pressure <span class="bold-text"> 5 times</span></h2>
             k = 3;

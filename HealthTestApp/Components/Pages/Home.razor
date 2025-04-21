@@ -121,14 +121,9 @@ else
             <div>
                 @* Last Test *@
                 <div>
+
                 </div>
                 @* Next Test *@
-                <div>
-                </div>
-            </div>
-            <!-- B RIGHT  -->
-            <div>
-                @* Chart *@
                 <div>
                 </div>
             </div>
@@ -143,6 +138,7 @@ else
     private string? SelectedMood;
     private string? MoodMessage;
     private List<Test> tests = new();
+    private List<UserTest> userTests = new();
     protected override async Task OnInitializedAsync()
     {
         LayoutState.SetLayout("Home", "Explore your Dahsboard");

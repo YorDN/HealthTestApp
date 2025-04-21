@@ -1,0 +1,81 @@
+﻿@page "/tests/youknow"
+@using Blazored.LocalStorage
+@inject ILocalStorageService LocalStorage
+
+<h3>Lüscher Color Test</h3>
+
+<p>Choose your colors in order of preference, starting from the most preferred to the least:</p>
+
+<div class="color-buttons">
+    @foreach (var color in Colors)
+    {
+        <button class="color-button" style="background-color:@color.HexColor;" @onclick="() => SelectColor(color.Name)">
+            @color.Name
+        </button>
+    }
+</div>
+
+@if (SelectedColors.Count > 0)
+{
+    <h4>Your Selected Colors:</h4>
+    <ul>
+        @foreach (var color in SelectedColors)
+        {
+            <li>@color</li>
+        }
+    </ul>
+    <button @onclick="SaveTestResult">Save Results</button>
+}
+
+@code {
+    // Color data (name and hex)
+    private List<ColorChoice> Colors = new()
+    {
+        new ColorChoice("Red", "#ff0000"),
+        new ColorChoice("Blue", "#0000ff"),
+        new ColorChoice("Green", "#00ff00"),
+        new ColorChoice("Yellow", "#ffff00"),
+        new ColorChoice("Black", "#000000"),
+        new ColorChoice("White", "#ffffff"),
+        new ColorChoice("Gray", "#808080"),
+        new ColorChoice("Brown", "#a52a2a")
+    };
+
+    // User's selected colors
+    private List<string> SelectedColors = new();
+
+    // Method to handle color selection
+    private void SelectColor(string colorName)
+    {
+        if (!SelectedColors.Contains(colorName))
+        {
+            SelectedColors.Add(colorName);
+        }
+        else
+        {
+            SelectedColors.Remove(colorName);
+        }
+    }
+
+    // Save the results to local storage
+    private async Task SaveTestResult()
+    {
+        // Save selected colors to local storage
+        await LocalStorage.SetItemAsync("luscherColors", SelectedColors);
+        // Show feedback message (you can extend this with interpretation logic)
+        Console.WriteLine("Results saved!");
+    }
+
+    // ColorChoice class to hold color name and hex value
+    public class ColorChoice
+    {
+        public string Name { get; set; }
+        public string HexColor { get; set; }
+
+        public ColorChoice(string name, string hexColor)
+        {
+            Name = name;
+            HexColor = hexColor;
+        }
+    }
+}

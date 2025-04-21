@@ -1,0 +1,523 @@
+﻿@page "/tests/luscher-color"
+@rendermode InteractiveServer
+
+@using System.Text
+@using HealthTestApp.Data.DTOs
+@using HealthTestApp.Data.Models
+@using HealthTestApp.Service
+@using HealthTestApp.Service.TestServices
+
+@inject NavigationManager Navigation
+@inject LayoutState LayoutState
+@inject LuscherColorTestService TestService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@layout HealthTestApp.Components.Layout.MainLayout
+
+<div class="shell">
+    <div class="luscher-test">
+        <h3 class="test-title">Luscher Color Test</h3>
+        <div class="test-description">
+            <p>The Luscher Color Test is a psychological test that measures your personality and stress levels based on color preferences. Select colors in order of preference to reveal insights about your current emotional state.</p>
+        </div>
+        @if(ErrorSaveMessage is not null)
+        {
+            <p style="color: red; text-align: center;">@ErrorSaveMessage</p>
+        }
+        @if (!isTestComplete)
+        {
+            <div class="test-progress">
+                <div class="progress-bar" style="width: @(currentStep == 1 ? "50%" : "100%")"></div>
+                <span>Step @currentStep of 2</span>
+            </div>
+            <p class="step-info">@stepLabel</p>
+            <div class="color-grid">
+                @foreach (var color in remainingColors)
+                {
+                    <button class="color-button" style="background-color:@color.Value" @onclick="() => SelectColor(color.Key)">
+                        <span class="color-tooltip">@color.Key</span>
+                    </button>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="result-container">
+                <h4>Your Detailed Test Results</h4>
+
+                <div class="result-section stress-level">
+                    <h5>Stress Level Analysis</h5>
+                    <div class="stress-meter">
+                        <div class="stress-indicator" style="width: @(stressLevel * 10)%; background-color: @GetStressColor(stressLevel)"></div>
+                    </div>
+                    <p class="stress-description">@stressDescription</p>
+                </div>
+
+                <div class="result-section">
+                    <h5>Primary Personality Traits</h5>
+                    <p>Your first choice (<span style="color:@allColors[firstRound[0]]">@firstRound[0]</span>) reveals:</p>
+                    <ul>
+                        @foreach (var trait in primaryTraits)
+                        {
+                            <li>@trait</li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="result-section">
+                    <h5>Current Emotional Needs</h5>
+                    <p>@emotionalNeeds</p>
+                </div>
+
+                <div class="result-section">
+                    <h5>Suppressed Characteristics</h5>
+                    <p>Your last choice (<span style="color:@allColors[secondRound[7]]">@secondRound[7]</span>) indicates:</p>
+                    <ul>
+                        @foreach (var item in suppressedTraits)
+                        {
+                            <li>@item</li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="result-section">
+                    <h5>Color Sequence Analysis</h5>
+                    <div class="sequence-analysis">
+                        <div class="first-sequence">
+                            <h6>First Selection Order</h6>
+                            @for (int i = 0; i < firstRound.Count; i++)
+                            {
+                                <div class="sequence-item">
+                                    <span class="sequence-number">@(i + 1)</span>
+                                    <span class="sequence-color" style="background-color:@allColors[firstRound[i]]"></span>
+                                    <span class="sequence-label">@firstRound[i]</span>
+                                </div>
+                            }
+                        </div>
+                        <div class="second-sequence">
+                            <h6>Second Selection Order</h6>
+                            @for (int i = 0; i < secondRound.Count; i++)
+                            {
+                                <div class="sequence-item">
+                                    <span class="sequence-number">@(i + 1)</span>
+                                    <span class="sequence-color" style="background-color:@allColors[secondRound[i]]"></span>
+                                    <span class="sequence-label">@secondRound[i]</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <p>@sequenceAnalysis</p>
+                </div>
+
+                <div class="result-section recommendations">
+                    <h5>Recommendations</h5>
+                    <ul>
+                        @foreach (var rec in recommendations)
+                        {
+                            <li>@rec</li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="result-actions">
+                    <button class="save-button" @onclick="SaveResults">Save Results</button>
+                    <button class="restart-button" @onclick="RestartTest">Take Test Again</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private Dictionary<string, string> allColors = new()
+    {
+        { "blue", "#0000FF" },
+        { "green", "#008000" },
+        { "red", "#FF0000" },
+        { "yellow", "#FFFF00" },
+        { "violet", "#800080" },
+        { "brown", "#8B4513" },
+        { "black", "#000000" },
+        { "grey", "#808080" }
+    };
+    LuscherTestData testData = new();
+    private List<string> firstRound = new();
+    private List<string> secondRound = new();
+    private List<KeyValuePair<string, string>> remainingColors;
+    private int currentStep = 1;
+    private bool isTestComplete = false;
+    private int stressLevel = 0;
+    private string stressDescription = "";
+    private List<string> primaryTraits = new();
+    private List<string> suppressedTraits = new();
+    private string emotionalNeeds = "";
+    private string sequenceAnalysis = "";
+    private List<string> recommendations = new();
+    private string stepLabel => currentStep == 1 ? "Step 1: Choose the colors in order of your preference (most to least liked)" :
+        "Step 2: Choose the colors again (your preferences may change)";
+    private string? ErrorSaveMessage;
+    protected override void OnInitialized()
+    {
+        ResetColors();
+        LayoutState.SetLayout("Luscher Color Test", "Psychological");
+    }
+
+    private void ResetColors()
+    {
+        var rnd = new Random();
+        remainingColors = allColors.OrderBy(x => rnd.Next()).ToList();
+    }
+
+    private void SelectColor(string colorName)
+    {
+        if (currentStep == 1)
+        {
+            firstRound.Add(colorName);
+        }
+        else
+        {
+            secondRound.Add(colorName);
+        }
+
+        remainingColors.RemoveAll(c => c.Key == colorName);
+
+        if (remainingColors.Count == 0)
+        {
+            if (currentStep == 1)
+            {
+                currentStep = 2;
+                ResetColors();
+            }
+            else
+            {
+                isTestComplete = true;
+                CalculateResults();
+            }
+        }
+    }
+
+    private void CalculateResults()
+    {
+        // Calculate stress level based on color position changes
+        stressLevel = CalculateStressLevel();
+        stressDescription = GetStressDescription(stressLevel);
+
+        // Analyze primary traits from first choice
+        primaryTraits = GetPrimaryTraits(firstRound[0]);
+
+        // Analyze emotional needs from top 3 choices
+        emotionalNeeds = GetEmotionalNeeds(firstRound.Take(3).ToList());
+
+        // Analyze suppressed traits from last choice
+        suppressedTraits = GetSuppressedTraits(secondRound[7]);
+
+        // Analyze sequence patterns
+        sequenceAnalysis = AnalyzeSequences(firstRound, secondRound);
+
+        // Generate recommendations
+        recommendations = GenerateRecommendations();
+    }
+
+    private int CalculateStressLevel()
+    {
+        int stressScore = 0;
+        for (int i = 0; i < 8; i++)
+        {
+            int firstPos = i;
+            int secondPos = secondRound.IndexOf(firstRound[i]);
+            stressScore += Math.Abs(firstPos - secondPos);
+        }
+        return Math.Min(10, stressScore / 3); // Scale to 1-10
+    }
+
+    private string GetStressDescription(int level)
+    {
+        return level switch
+        {
+            <= 2 => "Very low stress - You're in a stable, balanced state",
+            <= 4 => "Low stress - You're generally relaxed with minor tensions",
+            <= 6 => "Moderate stress - You're experiencing noticeable pressure but coping well",
+            <= 8 => "High stress - You're under significant pressure that may affect your wellbeing",
+            _ => "Very high stress - You're experiencing extreme tension that needs attention"
+        };
+    }
+
+    private List<string> GetPrimaryTraits(string firstColor)
+    {
+        var traits = new List<string>();
+        switch (firstColor)
+        {
+            case "blue":
+                traits.Add("Calm and composed demeanor");
+                traits.Add("Value deep, meaningful relationships");
+                traits.Add("Seek harmony and emotional fulfillment");
+                traits.Add("May avoid conflict or confrontation");
+                break;
+            case "green":
+                traits.Add("Strong willpower and persistence");
+                traits.Add("Value stability and security");
+                traits.Add("Take pride in accomplishments");
+                traits.Add("Can be stubborn or resistant to change");
+                break;
+            case "red":
+                traits.Add("Energetic and action-oriented");
+                traits.Add("Desire achievement and success");
+                traits.Add("Competitive nature");
+                traits.Add("May become impatient or aggressive");
+                break;
+            case "yellow":
+                traits.Add("Optimistic and future-oriented");
+                traits.Add("Value freedom and new experiences");
+                traits.Add("Creative and spontaneous");
+                traits.Add("May avoid responsibility or routine");
+                break;
+            case "violet":
+                traits.Add("Sensitive and intuitive");
+                traits.Add("Drawn to fantasy and imagination");
+                traits.Add("Seek meaningful connections");
+                traits.Add("May be prone to escapism");
+                break;
+            case "brown":
+                traits.Add("Practical and down-to-earth");
+                traits.Add("Focus on physical comfort and security");
+                traits.Add("Value routine and predictability");
+                traits.Add("May resist change or innovation");
+                break;
+            case "black":
+                traits.Add("Independent and self-sufficient");
+                traits.Add("May be going through significant change");
+                traits.Add("Desire control or finality");
+                traits.Add("Can be pessimistic or resistant");
+                break;
+            case "grey":
+                traits.Add("Neutral and balanced");
+                traits.Add("Prefer to avoid strong emotional involvement");
+                traits.Add("Analytical and objective");
+                traits.Add("May be indecisive or detached");
+                break;
+        }
+        return traits;
+    }
+
+    private string GetEmotionalNeeds(List<string> topColors)
+    {
+        var needs = new List<string>();
+        foreach (var color in topColors)
+        {
+            switch (color)
+            {
+                case "blue":
+                    needs.Add("emotional security and meaningful connections");
+                    break;
+                case "green":
+                    needs.Add("recognition and stability");
+                    break;
+                case "red":
+                    needs.Add("achievement and active engagement");
+                    break;
+                case "yellow":
+                    needs.Add("freedom and new opportunities");
+                    break;
+                case "violet":
+                    needs.Add("creative expression and deep understanding");
+                    break;
+                case "brown":
+                    needs.Add("physical comfort and routine");
+                    break;
+                case "black":
+                    needs.Add("control and independence");
+                    break;
+                case "grey":
+                    needs.Add("balance and detachment");
+                    break;
+            }
+        }
+        return "Currently, you most need " + string.Join(", ", needs.Take(needs.Count - 1)) +
+               (needs.Count > 1 ? " and " + needs.Last() : needs.FirstOrDefault() ?? "unknown");
+    }
+
+    private List<string> GetSuppressedTraits(string lastColor)
+    {
+        var traits = new List<string>();
+        switch (lastColor)
+        {
+            case "blue":
+                traits.Add("Avoiding emotional dependence");
+                traits.Add("Rejecting deep emotional connections");
+                traits.Add("May be suppressing feelings of vulnerability");
+                break;
+            case "green":
+                traits.Add("Suppressing stubbornness");
+                traits.Add("Avoiding situations requiring persistence");
+                traits.Add("May be resisting stability or routine");
+                break;
+            case "red":
+                traits.Add("Avoiding conflict or competition");
+                traits.Add("Suppressing anger or strong emotions");
+                traits.Add("May be resisting taking action");
+                break;
+            case "yellow":
+                traits.Add("Avoiding change or spontaneity");
+                traits.Add("Suppressing optimism or joy");
+                traits.Add("May be resisting new experiences");
+                break;
+            case "violet":
+                traits.Add("Avoiding fantasy or imagination");
+                traits.Add("Suppressing intuition or sensitivity");
+                traits.Add("May be resisting creative expression");
+                break;
+            case "brown":
+                traits.Add("Avoiding physical comforts");
+                traits.Add("Suppressing practical concerns");
+                traits.Add("May be resisting routine or stability");
+                break;
+            case "black":
+                traits.Add("Avoiding independence");
+                traits.Add("Suppressing need for control");
+                traits.Add("May be resisting finality or endings");
+                break;
+            case "grey":
+                traits.Add("Avoiding neutrality");
+                traits.Add("Suppressing analytical tendencies");
+                traits.Add("May be resisting detachment");
+                break;
+        }
+        return traits;
+    }
+
+    private string AnalyzeSequences(List<string> first, List<string> second)
+    {
+        var analysis = new StringBuilder();
+
+        // Check for consistency
+        int consistentCount = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            if (first[i] == second[i]) consistentCount++;
+        }
+
+        if (consistentCount >= 3)
+        {
+            analysis.Append("Your consistent color preferences indicate stable personality traits. ");
+        }
+        else
+        {
+            analysis.Append("Your changing color preferences suggest you may be experiencing emotional fluctuations. ");
+        }
+
+        // Check specific patterns
+        if (first[0] == second[0] && first[1] == second[1])
+        {
+            analysis.Append("Your top two choices remained the same, showing strong, clear preferences in these areas. ");
+        }
+
+        if (first.Take(3).Contains("red") && !second.Take(3).Contains("red"))
+        {
+            analysis.Append("The movement of red from your top choices may indicate reduced energy or motivation. ");
+        }
+
+        if (second.Take(3).Contains("blue") && !first.Take(3).Contains("blue"))
+        {
+            analysis.Append("Blue moving into your top choices suggests a growing need for calm and emotional connection. ");
+        }
+
+        return analysis.ToString();
+    }
+
+    private List<string> GenerateRecommendations()
+    {
+        var recs = new List<string>();
+
+        // Stress-related recommendations
+        if (stressLevel >= 7)
+        {
+            recs.Add("Practice daily relaxation techniques like deep breathing or meditation");
+            recs.Add("Consider reducing workload or responsibilities where possible");
+            recs.Add("Ensure you're getting adequate sleep and physical exercise");
+        }
+        else if (stressLevel >= 4)
+        {
+            recs.Add("Take regular breaks during work to prevent stress buildup");
+            recs.Add("Engage in hobbies or activities you find relaxing");
+        }
+
+        // Color-specific recommendations
+        if (firstRound[0] == "blue")
+        {
+            recs.Add("Seek out meaningful conversations with close friends");
+            recs.Add("Create a peaceful space at home for relaxation");
+        }
+        else if (firstRound[0] == "red")
+        {
+            recs.Add("Channel your energy into physical activity or new projects");
+            recs.Add("Be mindful of others' feelings in competitive situations");
+        }
+
+        if (secondRound[7] == "yellow")
+        {
+            recs.Add("Consider trying small new experiences to build comfort with change");
+        }
+
+        return recs;
+    }
+
+    private string GetStressColor(int level)
+    {
+        return level switch
+        {
+            <= 3 => "#4CAF50",  // Green
+            <= 6 => "#FFC107",  // Yellow
+            <= 8 => "#FF9800",   // Orange
+            _ => "#F44336"       // Red
+        };
+    }
+
+    private void RestartTest()
+    {
+        firstRound.Clear();
+        secondRound.Clear();
+        currentStep = 1;
+        isTestComplete = false;
+        stressLevel = 0;
+        stressDescription = "";
+        primaryTraits.Clear();
+        suppressedTraits.Clear();
+        emotionalNeeds = "";
+        sequenceAnalysis = "";
+        recommendations.Clear();
+        ResetColors();
+    }
+    private async Task SaveResults()
+    {
+        testData.FirstRound = firstRound;
+        testData.SecondRound = secondRound;
+        testData.StressLevel = stressLevel;
+        testData.StressDescription = stressDescription;
+        testData.PrimaryTraits = primaryTraits;
+        testData.EmotionalNeeds = emotionalNeeds;
+        testData.SuppressedTraits = suppressedTraits;
+        testData.SequenceAnalysis = sequenceAnalysis;
+        testData.Recommendations = recommendations;
+        testData.PrimaryColor = firstRound.FirstOrDefault();
+        testData.RejectedColor = secondRound.LastOrDefault();
+        testData.Summary = $"Stress level: {stressLevel}/10 - {stressDescription}";
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userIdString = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        ResultDto result = new();
+        if (Guid.TryParse(userIdString, out Guid userId))
+        {
+            result = await TestService.SaveTestAsync(userId, testData);
+        }
+        if (!result.IsValid)
+        {
+            ErrorSaveMessage = result.Message;
+        }
+        else
+        {
+            Navigation.NavigateTo("/");
+        }
+
+    }
+}
