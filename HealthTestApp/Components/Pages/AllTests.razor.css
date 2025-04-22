@@ -139,13 +139,13 @@
 }
 
 .test-type.psychological {
-    background-color: #e3f2fd;
-    color: #1565c0;
+    background: rgba(39, 144, 255, 0.1);
+    color: #2790FF;
 }
 
 .test-type.physical {
-    background-color: #c9b8ff;
-    color: #5427db;
+    background: rgba(84, 39, 219, 0.1);
+    color: #5427DB;
 }
 
 .test-difficulty {
