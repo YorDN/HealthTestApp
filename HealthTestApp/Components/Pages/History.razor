@@ -1,0 +1,290 @@
+﻿@page "/history"
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+@using HealthTestApp.Components.Pages.Tests.TestComponents
+@using HealthTestApp.Data.Models.Enumerations
+@using HealthTestApp.Service
+@using HealthTestApp.Service.TestServices
+@using HealthTestApp.Data.Models
+@using HealthTestApp.Service.UserServices
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Rendering
+@using System.Text.Json
+@inject UserTestService UserTestService
+@inject UserService UserService
+@inject LayoutState LayoutState
+
+@layout HealthTestApp.Components.Layout.MainLayout
+
+<div class="shell">
+    <div class="history-container">
+
+        @if (AllTests == null)
+        {
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>Loading your test history...</p>
+            </div>
+        }
+        else if (AllTests.Count == 0)
+        {
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class='bx bx-clipboard'></i>
+                </div>
+                <h3>No Tests Taken Yet</h3>
+                <p>You haven't completed any tests yet. Get started to track your health progress!</p>
+                <Button Text="Browse Tests" OnClick='() => NavigationManager.NavigateTo("/tests")' Color="#632FFF" />
+            </div>
+        }
+        else
+        {
+            if (page == 1)
+            {
+                <div class="filters-container">
+                    <div class="search-container">
+                        <div class="search-bar">
+                            <i class='bx bx-search search-icon'></i>
+                            <input type="text" @bind="SearchQuery" @bind:event="oninput"
+                                   placeholder="Search by test name..." class="search-input" />
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="filter-label">Filter by type:</label>
+                            <select @bind="SelectedType" class="filter-select">
+                                <option value="">All Types</option>
+                                @foreach (var type in Enum.GetValues(typeof(TestType)))
+                                {
+                                    <option value="@type">@type</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="filter-label">Sort by:</label>
+                            <select @bind="SortBy" class="filter-select">
+                                <option value="newest">Newest first</option>
+                                <option value="oldest">Oldest first</option>
+                            </select>
+                        </div>
+
+                        <Button Text="Apply Filters" OnClick="FilterTests" Color="#632FFF" />
+                    </div>
+                </div>
+
+                @if (FilteredTests.Any())
+                {
+                    <div class="history-grid">
+                        @foreach (var test in FilteredTests)
+                        {
+                            <div class="history-card @(test.Test?.Type.ToString().ToLower())">
+                                <div class="card-header">
+                                    <h3 class="test-name">@test.TestName</h3>
+                                    <span class="test-date">@test.TakenAt.ToString("MMM dd, yyyy")</span>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="test-meta">
+                                        <span class="test-type">@test.Test?.Type</span>
+                                        <span class="test-duration">@(test.Test?.EstimatedDuration) min</span>
+                                    </div>
+
+                                    @if (!string.IsNullOrEmpty(test.Result))
+                                    {
+                                        <div class="test-result">
+                                            <span class="result-label">Result:</span>
+                                            <span class="result-value">@test.Result</span>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="card-footer">
+                                    <button class="view-button @(test.Test?.Type.ToString().ToLower())" @onclick="() => ToggleDetails(test.Id)">
+                                        <i class='bx bx-line-chart'></i> View Details
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="pagination-info">
+                        Showing @FilteredTests.Count of @AllTests.Count tests
+                    </div>
+                }
+                else
+                {
+                    <div class="no-results">
+                        <i class='bx bx-search-alt'></i>
+                        <h3>No matching tests found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="result-view">
+                    <button class="back-button" @onclick="() => page = 1">
+                        <i class='bx bx-arrow-back'></i> Back to History
+                    </button>
+
+                    <div class="result-header">
+                        <h2 class="result-title">@SelectedTest.TestName</h2>
+                        <div class="result-meta">
+                            <span class="meta-item">
+                                <i class='bx bx-category'></i> @SelectedTest.Test?.Type
+                            </span>
+                            <span class="meta-item">
+                                <i class='bx bx-calendar'></i> @SelectedTest.TakenAt.ToString("MMMM dd, yyyy")
+                            </span>
+                            <span class="meta-item">
+                                <i class='bx bx-time'></i> @SelectedTest.TakenAt.ToString("HH:mm")
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="result-summary">
+                        <h3 class="section-title">Test Summary</h3>
+                        @if (!string.IsNullOrEmpty(SelectedTest.Result))
+                        {
+                            <div class="summary-card">
+                                <div class="summary-icon">
+                                    <i class='bx bx-check-circle'></i>
+                                </div>
+                                <div class="summary-content">
+                                    <h4>Final Result</h4>
+                                    <p>@SelectedTest.Result</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(SelectedTest.TestDataJson))
+                    {
+                        <div class="result-details">
+                            <h3 class="section-title">Detailed Results</h3>
+
+                            <div class="json-viewer">
+                                @try
+                                {
+                                    var jsonDoc = JsonDocument.Parse(SelectedTest.TestDataJson);
+                                    foreach (var prop in jsonDoc.RootElement.EnumerateObject())
+                                    {
+                                        if (prop.Value.ValueKind == JsonValueKind.Array && prop.Value[0].ValueKind == JsonValueKind.Object)
+                                        {
+                                            <div class="json-section">
+                                                <h4 class="json-section-title">@prop.Name</h4>
+                                                <div class="json-table-container">
+                                                    <table class="json-table">
+                                                        <thead>
+                                                            <tr>
+                                                                @foreach (var col in prop.Value[0].EnumerateObject())
+                                                                {
+                                                                    <th>@col.Name</th>
+                                                                }
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var row in prop.Value.EnumerateArray())
+                                                            {
+                                                                <tr>
+                                                                    @foreach (var col in row.EnumerateObject())
+                                                                    {
+                                                                        <td>@col.Value</td>
+                                                                    }
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (prop.Value.ValueKind == JsonValueKind.Array)
+                                        {
+                                            <div class="json-section">
+                                                <h4 class="json-section-title">@prop.Name</h4>
+                                                <ul class="json-list">
+                                                    @foreach (var item in prop.Value.EnumerateArray())
+                                                    {
+                                                        <li>@item</li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="json-property">
+                                                <span class="json-property-name">@prop.Name:</span>
+                                                <span class="json-property-value">@prop.Value</span>
+                                            </div>
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    <div class="json-error">
+                                        <i class='bx bx-error-circle'></i>
+                                        <p>Could not display test data</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+@code {
+    private List<UserTest> AllTests = new();
+    private UserTest SelectedTest;
+    private string SearchQuery = "";
+    private TestType? SelectedType;
+    private string SortBy = "newest";
+    private Guid ExpandedTestId = Guid.Empty;
+    private int page = 1;
+
+    private List<UserTest> FilteredTests { get; set; } = new();
+
+    [Inject] private NavigationManager NavigationManager { get; set; }
+
+    private void FilterTests()
+    {
+        var query = AllTests.AsQueryable();
+
+        if (!string.IsNullOrEmpty(SearchQuery))
+        {
+            query = query.Where(t =>
+                t.Test.Name.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
+                (t.Test.Description != null && t.Test.Description.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase))
+                );
+        }
+
+        if (SelectedType.HasValue)
+        {
+            query = query.Where(t => t.Test.Type == SelectedType.Value);
+        }
+
+        query = SortBy == "newest"
+            ? query.OrderByDescending(t => t.TakenAt)
+            : query.OrderBy(t => t.TakenAt);
+
+        FilteredTests = query.ToList();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await UserService.GetCurrentUserAsync();
+        AllTests = await UserTestService.LoadTestsForUser(user.Id);
+        FilterTests();
+    }
+
+    private async Task ToggleDetails(Guid testId)
+    {
+        ExpandedTestId = (ExpandedTestId == testId) ? Guid.Empty : testId;
+        SelectedTest = await UserTestService.GetUserTestByIdAsync(testId);
+        page = 2;
+    }
+}

@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 
 @using System.Text
+@using HealthTestApp.Components.Pages.Tests.TestComponents
 @using HealthTestApp.Data.DTOs
 @using HealthTestApp.Data.Models
 @using HealthTestApp.Service
@@ -16,9 +17,9 @@
 
 <div class="shell">
     <div class="luscher-test">
-        <h3 class="test-title">Luscher Color Test</h3>
+        <h2 style="font-weight: bold; color: #404040; margin-bottom: 20px; text-align: center;">Luscher Color Test</h2>
         <div class="test-description">
-            <p>The Luscher Color Test is a psychological test that measures your personality and stress levels based on color preferences. Select colors in order of preference to reveal insights about your current emotional state.</p>
+            <p style="max-width: 800px;">The Luscher Color Test is a psychological test that measures your personality and stress levels based on color preferences. Select colors in order of preference to reveal insights about your current emotional state.</p>
         </div>
         @if(ErrorSaveMessage is not null)
         {
@@ -26,24 +27,46 @@
         }
         @if (!isTestComplete)
         {
-            <div class="test-progress">
-                <div class="progress-bar" style="width: @(currentStep == 1 ? "50%" : "100%")"></div>
-                <span>Step @currentStep of 2</span>
-            </div>
-            <p class="step-info">@stepLabel</p>
-            <div class="color-grid">
-                @foreach (var color in remainingColors)
-                {
-                    <button class="color-button" style="background-color:@color.Value" @onclick="() => SelectColor(color.Key)">
-                        <span class="color-tooltip">@color.Key</span>
-                    </button>
-                }
-            </div>
+            if(currentStep == 0)
+            {
+                <div class="discription-container">
+                    <h3 class="subtitle">How it works:</h3>
+                    <ol class="list-decimal ml-5 space-y-1">
+                        <li>Select colors from the 8 given <strong class="bold-text"> in the order you prefer</strong>.</li>
+                        <li>Select from the colors again <strong class="bold-text"> without trying to remember your first choices</strong>.</li>
+                    </ol>
+                </div>
+                <div class="discription-container">
+                    <h3 class="subtitle">Time to complete:</h3>
+                    <p>The test takes around <strong class="bold-text">1 minute</strong> to complete</p>
+                </div>
+                <Button Color="#2790FF" Text="Start" OnClick="() => currentStep++" />
+            }
+            else
+            {
+                <div style="display: flex; justify-content: center;">
+                    <div class="test-progress">
+                        <div class="progress-bar" style="width: @(currentStep == 1 ? "50%" : "100%")"></div>
+                        <span>Step @currentStep of 2</span>
+                    </div>
+                </div>
+                <h3 class="step-info">@stepLabel</h3>
+                <div style="display: flex; justify-content: center;">
+                    <div class="color-grid">
+                        @foreach (var color in remainingColors)
+                        {
+                            <button class="color-button" style="background-color:@color.Value" @onclick="() => SelectColor(color.Key)">
+                                <span class="color-tooltip">@color.Key</span>
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
         }
         else
         {
             <div class="result-container">
-                <h4>Your Detailed Test Results</h4>
+                <h3 style="font-weight: bold; color: #404040; margin-bottom: 20px; text-align: center;">Your Detailed Test Results</h3>
 
                 <div class="result-section stress-level">
                     <h5>Stress Level Analysis</h5>
@@ -144,7 +167,7 @@
     private List<string> firstRound = new();
     private List<string> secondRound = new();
     private List<KeyValuePair<string, string>> remainingColors;
-    private int currentStep = 1;
+    private int currentStep = 0;
     private bool isTestComplete = false;
     private int stressLevel = 0;
     private string stressDescription = "";

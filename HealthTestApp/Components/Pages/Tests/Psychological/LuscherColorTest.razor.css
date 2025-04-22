@@ -2,26 +2,19 @@
 .luscher-test {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 1.5rem;
     padding: 2rem;
-    font-family: 'Segoe UI', sans-serif;
-    max-width: 800px;
     margin: 0 auto;
     border-radius: 16px;
-}
-
-.test-title {
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-    font-size: 2rem;
 }
 
 .test-description {
     text-align: center;
     color: #555;
     margin-bottom: 1.5rem;
-    max-width: 600px;
+    display: flex;
+    justify-content: center;
+
     line-height: 1.6;
 }
 
@@ -29,6 +22,7 @@
     width: 100%;
     max-width: 400px;
     margin-bottom: 1rem;
+
 }
 
 .progress-bar {
@@ -47,11 +41,11 @@
 }
 
 .step-info {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #333;
     margin-bottom: 1.5rem;
     text-align: center;
+    font-weight: bold;
+    color: #404040;
+
 }
 
 .color-grid {
@@ -245,7 +239,21 @@
     gap: 1rem;
     margin-top: 2rem;
 }
+.bold-text {
+    color: #2790FF;
+    font-weight: bold;
+}
 
+.subtitle {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.discription-container {
+    margin-top: 1.5rem;
+    padding: 0 0.5rem;
+}
 @media (max-width: 600px) {
     .color-grid {
         grid-template-columns: repeat(2, 1fr);
