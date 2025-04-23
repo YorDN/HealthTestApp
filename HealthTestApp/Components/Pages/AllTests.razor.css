@@ -191,11 +191,11 @@
     color: #777;
 }
 
-    .test-stats span {
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-    }
+.test-stats span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
 
 .start-button.psychological {
     background-color: #2790FF;
@@ -235,20 +235,20 @@
     padding: 3rem 0;
 }
 
-    .no-results img {
-        width: 150px;
-        opacity: 0.7;
-        margin-bottom: 1rem;
-    }
+.no-results img {
+    width: 150px;
+    opacity: 0.7;
+    margin-bottom: 1rem;
+}
 
-    .no-results h4 {
-        color: #555;
-        margin-bottom: 0.5rem;
-    }
+.no-results h4 {
+    color: #555;
+    margin-bottom: 0.5rem;
+}
 
-    .no-results p {
-        color: #777;
-    }
+.no-results p {
+    color: #777;
+}
 
 @media (max-width: 768px) {
     .tests-grid {

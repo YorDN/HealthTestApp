@@ -366,22 +366,22 @@
     border-collapse: collapse;
 }
 
-    .json-table th {
-        background: #e9ecef;
-        padding: 0.75rem;
-        text-align: left;
-        font-weight: 500;
-        color: #495057;
-    }
+.json-table th {
+    background: #e9ecef;
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 500;
+    color: #495057;
+}
 
-    .json-table td {
-        padding: 0.75rem;
-        border-bottom: 1px solid #eee;
-    }
+.json-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #eee;
+}
 
-    .json-table tr:nth-child(even) {
-        background: #f8f9fa;
-    }
+.json-table tr:nth-child(even) {
+    background: #f8f9fa;
+}
 
 .json-list {
     list-style-type: none;
@@ -389,10 +389,10 @@
     margin: 0;
 }
 
-    .json-list li {
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #eee;
-    }
+.json-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
 
 .json-property {
     margin-bottom: 0.75rem;
@@ -415,7 +415,6 @@
     color: #dc3545;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .history-grid {
         grid-template-columns: 1fr;

@@ -121,3 +121,8 @@ svg#freepik_stories-computer-login.animated #freepik--Character--inject-23 {
 .animated {
     width: 500px;
 }
+@media (max-width: 1100px) {
+    .row {
+        display: flex;
+    }
+}

@@ -13,3 +13,8 @@
     justify-content: center;
     margin-top: 30px;
 }
+@media (max-width: 500px){
+    .button{
+        min-width: 130px;
+    }
+}
