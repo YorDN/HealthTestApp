@@ -28,7 +28,7 @@ Authentication and Authoriasation are done via the **ASP.NET Core Identity**
 - **History of the tests** taken by the user ⏳
 - **Profile Manager** 🧑
 ## 4️⃣ Installation
-Izentia requires installation for now to work. We will be hosting it in the near future. For now if you want more information about the project, you can see it at [[izentia-buki.netlify.app]]
+Izentia requires installation for now to work. We will be hosting it in the near future. For now if you want more information about the project, you can see it at [izentia-buki.netlify.app]
 ### 🔧 Prerequisites
 - .NET 8 SDK
 - SQL Server
