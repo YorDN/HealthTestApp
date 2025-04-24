@@ -12,6 +12,8 @@ using Blazorise.Icons.FontAwesome;
 using HealthTestApp.Service.TestServices;
 using HealthTestApp.Service.UserServices;
 using Blazored.LocalStorage;
+using HealthTestApp.Data.Seeder;
+using System;
 
 namespace HealthTestApp;
 
@@ -125,7 +127,12 @@ public class Program
                 }
             }
         }
-
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<ApplicationDbContext>();
+            await DbSeeder.SeedAsync(context);
+        }
         app.Run();
     }
 }
