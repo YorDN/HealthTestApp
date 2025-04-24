@@ -1,12 +1,13 @@
 # Izentia
 ## 1️⃣ Overview
-***Izentia*** is a *digital hub* for storing both phisical and psychological tests. It guides the user and helps him measure his general health. The tests are easy to do through the Web and don't require any *external hardware* ⛔.
+***Izentia*** is an *opensource digital hub* for storing both phisical and psychological tests. It guides the user and helps him measure his general health. The tests are easy to do through the Web and don't require any *external hardware* ⛔.
 
 ## 2️⃣ Authors
 The Izentia team consists of the following members:
-- **Yordan Yordanov** - Chief Frontend and Backend / Team Lead
-- **Lyubomir Kostadinov** - Backend
+- **Yordan Yordanov** - Lead Developer and Team Lead
+- **Lyubomir Kostadinov** - Backend and Database engineer
 - **Martin Mitev** - Research and Marketing
+- **Adriano Djermanski** - Research and Support
 - **Aleksandra Georgieva** - Consultant
 
 If you wish to contact any of them, you can look up their contact information on the Izentia website, on the specified page, dedicated to contacts. Please note that some members may not want their contact information on the page, so feel free to contact Izentia in one of the ways specified in the **Contribution section** and we will redirect you to the desired member of the team.
@@ -27,11 +28,12 @@ Authentication and Authoriasation are done via the **ASP.NET Core Identity**
 - **History of the tests** taken by the user ⏳
 - **Profile Manager** 🧑
 ## 4️⃣ Installation
-Izentia doesn't require Installation - if you wish to visit the website you can do so at 
+Izentia requires installation for now to work. We will be hosting it in the near future. For now if you want more information about the project, you can see it [here](https://izentia-buki.netlify.app/)
 ### 🔧 Prerequisites
 - .NET 8 SDK
 - SQL Server
 - Blazor environment
+- An IDE, supporting the .NET platform and the Blazor Framework
 ### 📋 Steps
 
 To install (clone) the repository you have to use the GUI of Github or write the following command: 
