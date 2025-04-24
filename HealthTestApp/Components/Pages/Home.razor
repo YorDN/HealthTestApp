@@ -38,7 +38,7 @@ else
                     <div class="greet-container">
                         <h3 id="welcome">Welcome back</h3>
                         <h3 id="username">@CurrentUser.UserName!</h3>
-                        <Button Text="Check your profile" Color="#2790FF" />
+                        <Button Text="Check your profile" Color="#2790FF" OnClick="GoToProfile"/>
                     </div>
                 </div>
                 @* How you feel *@
@@ -201,5 +201,9 @@ else
     private void AllTestsNavigate()
     {
         Navigation.NavigateTo("/tests");
+    }
+    private void GoToProfile()
+    {
+        Navigation.NavigateTo("/Account/Manage");
     }
 }
