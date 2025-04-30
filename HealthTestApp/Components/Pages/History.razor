@@ -47,7 +47,7 @@
                         <div class="search-bar">
                             <i class='bx bx-search search-icon'></i>
                             <input type="text" @bind="SearchQuery" @bind:event="oninput"
-                                   placeholder="Search by test name..." class="search-input" />
+                            placeholder="Search by test name..." class="search-input" />
                         </div>
 
                         <div class="filter-group">
@@ -278,6 +278,7 @@
     {
         var user = await UserService.GetCurrentUserAsync();
         AllTests = await UserTestService.LoadTestsForUser(user.Id);
+        LayoutState.SetCustomLayout("History", "View your Test History", "#2790FF");
         FilterTests();
     }
 
